@@ -54,4 +54,20 @@ module.exports.setup = function(app: any): void {
     app.get("/second", function(req: Request, res: Response): void {
         res.render("second");
     });
+
+    app.get("/taskmodule", function(req: Request, res: Response): void {
+        res.render("taskmodule");
+    });
+
+    app.get("/youtube", function(req: Request, res: Response): void {
+        res.render("youtube");
+    });
+
+    app.get("/powerapps", function(req: Request, res: Response): void {
+        res.render("powerapps");
+    });
+
+    app.get("/customform", function(req: Request, res: Response): void {
+        res.render("customform");
+    });
 };

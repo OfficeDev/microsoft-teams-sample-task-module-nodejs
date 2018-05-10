@@ -2,65 +2,82 @@
     "$schema": "https://statics.teams.microsoft.com/sdk/v1.2/manifest/MicrosoftTeams.schema.json",
     "manifestVersion": "1.2",
     "version": "1.0.0",
-    "id": "00000000-0000-0000-0000-000000000000",
-    "packageName": "com.contoso.helloworld",
+    "id": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
+    "packageName": "com.microsoft.teams.build2018",
     "developer": {
-        "name": "Contoso",
+        "name": "Bill Bliss",
         "websiteUrl": "https://www.microsoft.com",
         "privacyUrl": "https://www.microsoft.com/privacy",
         "termsOfUseUrl": "https://www.microsoft.com/termsofuse"
     },
+    "icons": {
+        "color": "color_icon.png",
+        "outline": "outline_icon.png"
+    },
     "name": {
-        "short": "Hello World",
-        "full": "Hello World App for Microsoft Teams"
+        "short": "Teams Build",
+        "full": "Sample app used for Build 2018 Sessions"
     },
     "description": {
-        "short": "Hello World App for Microsoft Teams",
+        "short": "Teams demo app for Microsoft Build 2018",
         "full": "This sample app provides a very simple app for Microsoft Teams. You can extend this to add more content and capabilities."
     },
-    "icons": {
-        "outline": "contoso20x20.png",
-        "color": "contoso96x96.png"
-    },
-    "accentColor": "#60A18E",
-    "staticTabs": [{
-        "entityId": "com.contoso.helloworld.hellotab",
-        "name": "Hello Tab",
-        "contentUrl": "https://yourteamsapp.ngrok.io/hello",
-        "scopes": [
-            "personal"
-        ]
-    }],
-    "configurableTabs": [{
-        "configurationUrl": "https://yourteamsapp.ngrok.io/configure",
-        "canUpdateConfiguration": true,
-        "scopes": [
-            "team"
-        ]
-    }],
-    "bots": [{
-        "botId": "00000000-0000-0000-0000-000000000000",
-        "needsChannelSelector": false,
-        "isNotificationOnly": false,
-        "scopes": [
-            "team",
-            "personal"
-        ]
-    }],
-    "composeExtensions": [{
-        "botId": "00000000-0000-0000-0000-000000000000",
-        "commands": [{
-            "id": "getRandomText",
-            "description": "Gets some random text and images that you can insert in messages for fun.",
-            "title": "Get some random text for fun",
-            "initialRun": true,
-            "parameters": [{
-                "name": "cardTitle",
-                "description": "Card title to use",
-                "title": "Card title"
-            }]
-        }]
-    }],
-    "permissions": [],
-    "validDomains": []
+    "accentColor": "#020081",
+    "configurableTabs": [
+        {
+            "configurationUrl": "https://build2018.ngrok.io/configure",
+            "canUpdateConfiguration": true,
+            "scopes": [
+                "team"
+            ]
+        }
+    ],
+    "staticTabs": [
+        {
+            "entityId": "com.microsoft.teams.build2018.taskmodule",
+            "name": "Tasks!",
+            "contentUrl": "https://build2018.ngrok.io/taskmodule",
+            "websiteUrl": "https://build2018.ngrok.io/taskmodule",
+            "scopes": [
+                "personal"
+            ]
+        }
+    ],
+    "bots": [
+        {
+            "botId": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
+            "scopes": [
+                "team",
+                "personal"
+            ]
+        }
+    ],
+    "composeExtensions": [
+        {
+            "botId": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
+            "canUpdateConfiguration": false,
+            "commands": [
+                {
+                    "id": "getRandomText",
+                    "title": "Get some random text for fun",
+                    "description": "Gets some random text and images that you can insert in messages for fun.",
+                    "initialRun": true,
+                    "parameters": [
+                        {
+                            "name": "cardTitle",
+                            "title": "Card title",
+                            "description": "Card title to use"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": [
+        "build2018.ngrok.io"
+    ]
 }

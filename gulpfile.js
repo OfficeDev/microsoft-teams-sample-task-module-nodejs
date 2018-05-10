@@ -37,8 +37,8 @@ gulp.task('clean', function() {
     return del([
         'build/**/*',
         // Azure doesn't like it when we delete build/src
-        '!build/src',
-        'manifest/**/*'
+        '!build/src'
+        // 'manifest/**/*'
     ])
 });
 
@@ -87,7 +87,7 @@ gulp.task('build', ['clean', 'ts:lint', 'ts', 'statics:copy']);
  * Build manifest
  */
 gulp.task('generate-manifest', function() {
-    gulp.src(['./public/images/contoso*', 'src/manifest.json'])
+    gulp.src(['./public/images/*_icon.png', 'src/manifest.json'])
         .pipe(zip('TeamsBuild.zip'))
         .pipe(gulp.dest('manifest'));
 });

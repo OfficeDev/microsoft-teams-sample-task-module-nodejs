@@ -46,6 +46,18 @@ module.exports.setup = function (app) {
     app.get("/second", function (req, res) {
         res.render("second");
     });
+    app.get("/taskmodule", function (req, res) {
+        res.render("taskmodule");
+    });
+    app.get("/youtube", function (req, res) {
+        res.render("youtube");
+    });
+    app.get("/powerapps", function (req, res) {
+        res.render("powerapps");
+    });
+    app.get("/customform", function (req, res) {
+        res.render("customform");
+    });
 };
 
 //# sourceMappingURL=tabs.js.map

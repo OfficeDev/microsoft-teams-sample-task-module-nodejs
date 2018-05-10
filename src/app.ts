@@ -64,16 +64,9 @@ let botSettings = {
     storage: botStorage,
 };
 let bot = new TeamsBot(connector as builder.ChatConnector, botSettings);
-/*
-bot.dialog("/", [
-    function (session: builder.Session, args: any, next: () => void): void {
-        session.send("hello world");
-    },
-]);
-*/
 
 // Adding a messaging extension to our app
-let messagingExtension = new MessagingExtension(connector);
+// let messagingExtension = new MessagingExtension(connector);
 
 // Set up route for the bot to listen.
 // NOTE: This endpoint cannot be changed and must be api/messages

@@ -28,6 +28,21 @@
             }
         },
         {
+            "name": "Attach to Teams",
+            "type": "chrome",
+            "request": "launch",
+            "port": 9222,
+            "runtimeExecutable": "C:/Users/billb/AppData/Local/Microsoft/Teams/Update.exe --processStart 'Teams.exe'",
+            "cwd": "{workspaceRoot}/build/src",
+            "webRoot": "${workspaceFolder}",
+            "env": {
+                "BASE_URI": "https://build2018.ngrok.io",
+                "MICROSOFT_APP_ID": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
+                "MICROSOFT_APP_PASSWORD": "tsbapsTSDM227}qOYF44#;%",
+                "NODE_DEBUG": "botbuilder"
+            }
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "Launch - Fiddler (only works when running Fiddler)",

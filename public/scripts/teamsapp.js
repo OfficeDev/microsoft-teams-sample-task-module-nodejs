@@ -40,8 +40,40 @@
 
                 // This API tells Microsoft Teams to enable the 'Save' button. Since Microsoft Teams always assumes
                 // an initial invalid state, without this call the 'Save' button will never be enabled.
-                microsoftTeams.settings.setValidityState(selectedTab === 'first' || selectedTab === 'second');
+                microsoftTeams.settings.setValidityState(selectedTab === 'first' || selectedTab === 'second' || selectedTab === 'taskmodule');
             };
+        }
+
+        var taskModuleButtons = document.getElementsByClassName("taskModuleButton");
+        for (var btn of taskModuleButtons) {
+            btn.addEventListener("click", 
+                function () {
+                    var taskInfo = {
+                        appId: "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
+                        height: "medium",
+                        width: "large",
+                        url: window.location.protocol + "//" + window.location.host + "/" + this.id.toLowerCase()
+                    };
+                    var completionHandler = (err, result) => { console.log("Result: " + result) };
+                    switch (this.id.toLowerCase()) {
+                        case "youtube":
+                            taskInfo.title = "Satya Nadella's Build 2018 Keynote";
+                            microsoftTeams.task.start(taskInfo, completionHandler(null, "OK"));
+                            break;
+                        case "powerapps":
+                            taskInfo.title = "PowerApp: Asset Checkout";
+                            microsoftTeams.task.start(taskInfo, completionHandler(null, "OK"));
+                            break;
+                        case "customform":
+                            taskInfo.title = "Custom Form";
+                            microsoftTeams.task.start(taskInfo, completionHandler);
+                            break;
+                        default:
+                            console.log("Unexpected button ID");
+                            return;
+                    }
+                    console.log("URL: " + taskInfo.url);
+                });
         }
     });
 
