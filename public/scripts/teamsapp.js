@@ -50,7 +50,7 @@
                 function () {
                     var taskInfo = {
                         appId: "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
-                        height: "medium",
+                        height: "large",
                         width: "large",
                         url: window.location.protocol + "//" + window.location.host + "/" + this.id.toLowerCase()
                     };
@@ -66,6 +66,8 @@
                             break;
                         case "customform":
                             taskInfo.title = "Custom Form";
+                            taskInfo.height = "medium";
+                            taskInfo.width = "medium";
                             microsoftTeams.tasks.startTask(taskInfo, completionHandler);
                             break;
                         default:

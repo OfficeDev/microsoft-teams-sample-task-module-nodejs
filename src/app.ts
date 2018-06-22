@@ -66,7 +66,7 @@ let botSettings = {
 let bot = new TeamsBot(connector as builder.ChatConnector, botSettings);
 
 // Adding a messaging extension to our app
-// let messagingExtension = new MessagingExtension(connector);
+let messagingExtension = new MessagingExtension(connector);
 
 // Set up route for the bot to listen.
 // NOTE: This endpoint cannot be changed and must be api/messages
