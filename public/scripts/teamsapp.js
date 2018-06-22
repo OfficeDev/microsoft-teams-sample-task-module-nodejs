@@ -58,15 +58,15 @@
                     switch (this.id.toLowerCase()) {
                         case "youtube":
                             taskInfo.title = "Satya Nadella's Build 2018 Keynote";
-                            microsoftTeams.task.start(taskInfo, completionHandler(null, "OK"));
+                            microsoftTeams.tasks.startTask(taskInfo, completionHandler(null, "OK"));
                             break;
                         case "powerapps":
                             taskInfo.title = "PowerApp: Asset Checkout";
-                            microsoftTeams.task.start(taskInfo, completionHandler(null, "OK"));
+                            microsoftTeams.tasks.startTask(taskInfo, completionHandler(null, "OK"));
                             break;
                         case "customform":
                             taskInfo.title = "Custom Form";
-                            microsoftTeams.task.start(taskInfo, completionHandler);
+                            microsoftTeams.tasks.startTask(taskInfo, completionHandler);
                             break;
                         default:
                             console.log("Unexpected button ID");
