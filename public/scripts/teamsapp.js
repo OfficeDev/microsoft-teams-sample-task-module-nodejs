@@ -68,10 +68,14 @@
                     switch (this.id.toLowerCase()) {
                         case "youtube":
                             taskInfo.title = "Satya Nadella's Build 2018 Keynote";
+                            taskInfo.height = "large";
+                            taskInfo.width = "large";
                             microsoftTeams.tasks.startTask(taskInfo, completionHandler(null, "OK"));
                             break;
                         case "powerapps":
                             taskInfo.title = "PowerApp: Asset Checkout";
+                            taskInfo.height = "large";
+                            taskInfo.width = "large";
                             microsoftTeams.tasks.startTask(taskInfo, completionHandler(null, "OK"));
                             break;
                         case "customform":
