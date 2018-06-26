@@ -28,7 +28,7 @@ var tsProject = ts.createProject('./tsconfig.json', {
 
 var filesToWatch = ['**/*.ts', '!node_modules/**'];
 var filesToLint = ['**/*.ts', '!src/typings/**', '!node_modules/**'];
-var staticFiles = ['src/**/*.json', 'src/**/*.pug'];
+var staticFiles = ['src/**/*.json', 'src/**/*.pug', '!manifest.json'];
 
 /**
  * Clean build output.
@@ -66,8 +66,8 @@ gulp.task('ts', ['clean'], function() {
         .src()
         .pipe(sourcemaps.init())
         .pipe(tsProject())
-        .pipe(sourcemaps.write('.', {includeContent: false, sourceRoot: '.'}))
-        .pipe(gulp.dest('build'));
+        .pipe(sourcemaps.write('.', { sourceRoot: function(file) { return file.cwd + '/build'; }}))
+        .pipe(gulp.dest('build/src'));
 });
 
 /**

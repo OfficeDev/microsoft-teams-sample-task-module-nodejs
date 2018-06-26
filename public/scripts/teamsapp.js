@@ -49,9 +49,7 @@
         // Initialize deep links
         var appRoot = `${window.location.protocol}//${window.location.host}/`;
         var taskInfo = {
-            appId: "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
-            height: "large",
-            width: "large"
+            appId: "bdc707d5-48e0-48f8-bbe7-6131e0565a4c"
         };
         var deepLink = document.getElementById("dlYouTube");
         deepLink.href = encodeURI(`https://teams.microsoft.com/l/task/${taskInfo.appId}?url=${appRoot}youtube&height=${taskInfo.height}&width=${taskInfo.width}&title=${encodeURIComponent("Satya Nadella's Build 2018 Keynote")}`);

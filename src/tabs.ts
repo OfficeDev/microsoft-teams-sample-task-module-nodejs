@@ -30,7 +30,7 @@ module.exports.setup = function(app: any): void {
 
     // Configure the view engine, views folder and the statics path
     app.set("view engine", "pug");
-    app.set("views", path.join(__dirname, "src/views"));
+    app.set("views", path.join(__dirname, "views"));
 
     // Setup home page
     app.get("/", function(req: Request, res: Response): void {

@@ -36,8 +36,8 @@ import { MessagingExtension } from "./MessagingExtension";
 
 let app = express();
 app.set("port", process.env.PORT || 3333);
-app.use(express.static(path.join(__dirname, "../public")));
-app.use(favicon(path.join(__dirname, "../public/images", "favicon.ico")));
+app.use(express.static(path.join(__dirname, "../../public")));
+app.use(favicon(path.join(__dirname, "../../public/images", "favicon.ico")));
 app.use(bodyParser.json());
 
 // Configure bot storage
