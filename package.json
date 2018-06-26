@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Microsoft Teams Node.js Hello World App. Start here to build your first app in Teams platform.",
   "scripts": {
-    "start": "cd ./build/src && node app.js",
+    "start": "gulp build && cd ./build/src && node app.js",
     "build": "gulp build",
     "debug": "cd ./build/src && node --debug app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
