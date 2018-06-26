@@ -18,8 +18,8 @@
     "url": "https://github.com/charlesprakash/msteams-nodejs-hello-world/issues"
   },
   "engines": {
-    "node": ">=8.11.1",
-    "npm": ">=6.0.0"
+    "node": ">=8.9.4",
+    "npm": ">=5.6.0"
   },
   "homepage": "https://github.com/charlesprakash/msteams-nodejs-hello-world#readme",
   "dependencies": {
