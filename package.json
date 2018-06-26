@@ -17,6 +17,10 @@
   "bugs": {
     "url": "https://github.com/charlesprakash/msteams-nodejs-hello-world/issues"
   },
+  "engines": {
+    "node": ">=8.9.4",
+    "npm": ">=5.6.0"
+  },
   "homepage": "https://github.com/charlesprakash/msteams-nodejs-hello-world#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
