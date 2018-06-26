@@ -45,28 +45,44 @@
         }
 
         var taskModuleButtons = document.getElementsByClassName("taskModuleButton");
+
+        // Initialize deep links
+        var appRoot = `${window.location.protocol}//${window.location.host}/`;
+        var taskInfo = {
+            appId: "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
+            height: "large",
+            width: "large"
+        };
+        var deepLink = document.getElementById("dlYouTube");
+        deepLink.href = encodeURI(`https://teams.microsoft.com/l/task/${taskInfo.appId}?url=${appRoot}youtube&height=${taskInfo.height}&width=${taskInfo.width}&title=${encodeURIComponent("Satya Nadella's Build 2018 Keynote")}`);
+        deepLink = document.getElementById("dlPowerApps");
+        deepLink.href = encodeURI(`https://teams.microsoft.com/l/task/${taskInfo.appId}?url=${appRoot}powerapps&height=${taskInfo.height}&width=${taskInfo.width}&title=${encodeURIComponent("PowerApp: Asset Checkout")}`);
+        deepLink = document.getElementById("dlCustomForm");
+        deepLink.href = encodeURI(`https://teams.microsoft.com/l/task/${taskInfo.appId}?url=${appRoot}customform&height=medium&width=medium&title=${encodeURIComponent("Custom Form")}`);
+
         for (var btn of taskModuleButtons) {
             btn.addEventListener("click", 
                 function () {
-                    var taskInfo = {
-                        appId: "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
-                        height: "medium",
-                        width: "large",
-                        url: window.location.protocol + "//" + window.location.host + "/" + this.id.toLowerCase()
-                    };
+                    taskInfo.url = appRoot + this.id.toLowerCase();
                     var completionHandler = (err, result) => { console.log("Result: " + result) };
                     switch (this.id.toLowerCase()) {
                         case "youtube":
                             taskInfo.title = "Satya Nadella's Build 2018 Keynote";
-                            microsoftTeams.task.start(taskInfo, completionHandler(null, "OK"));
+                            taskInfo.height = "large";
+                            taskInfo.width = "large";
+                            microsoftTeams.tasks.startTask(taskInfo, completionHandler(null, "OK"));
                             break;
                         case "powerapps":
                             taskInfo.title = "PowerApp: Asset Checkout";
-                            microsoftTeams.task.start(taskInfo, completionHandler(null, "OK"));
+                            taskInfo.height = "large";
+                            taskInfo.width = "large";
+                            microsoftTeams.tasks.startTask(taskInfo, completionHandler(null, "OK"));
                             break;
                         case "customform":
                             taskInfo.title = "Custom Form";
-                            microsoftTeams.task.start(taskInfo, completionHandler);
+                            taskInfo.height = "medium";
+                            taskInfo.width = "small";
+                            microsoftTeams.tasks.startTask(taskInfo, completionHandler);
                             break;
                         default:
                             console.log("Unexpected button ID");

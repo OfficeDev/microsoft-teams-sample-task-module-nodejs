@@ -4,8 +4,8 @@
 var microsoftTeams;
 (function (microsoftTeams) {
     "use strict";
-    const version = "1.2";
-    const validOrigins = [
+    var version = "1.2";
+    var validOrigins = [
         "https://teams.microsoft.com",
         "https://teams.microsoft.us",
         "https://int.teams.microsoft.com",
@@ -13,51 +13,37 @@ var microsoftTeams;
         "https://ssauth.skype.com",
         "http://dev.local" // local development
     ];
-    const handlers = {};
+    var handlers = {};
     // Ensure these declarations stay in sync with the framework.
-    const frameContexts = {
+    var frameContexts = {
         settings: "settings",
         content: "content",
         authentication: "authentication",
         remove: "remove"
     };
-    const hostClientTypes = {
+    var hostClientTypes = {
         desktop: "desktop",
         web: "web"
     };
-    let TeamType;
-    (function (TeamType) {
-        TeamType[TeamType["Standard"] = 0] = "Standard";
-        TeamType[TeamType["Edu"] = 1] = "Edu";
-        TeamType[TeamType["Class"] = 2] = "Class";
-        TeamType[TeamType["Plc"] = 3] = "Plc";
-        TeamType[TeamType["Staff"] = 4] = "Staff";
-    })(TeamType = microsoftTeams.TeamType || (microsoftTeams.TeamType = {}));
-    let UserTeamRole;
-    (function (UserTeamRole) {
-        UserTeamRole[UserTeamRole["Admin"] = 0] = "Admin";
-        UserTeamRole[UserTeamRole["User"] = 1] = "User";
-        UserTeamRole[UserTeamRole["Guest"] = 2] = "Guest";
-    })(UserTeamRole = microsoftTeams.UserTeamRole || (microsoftTeams.UserTeamRole = {}));
     // This indicates whether initialize was called (started).
     // It does not indicate whether initialization is complete. That can be inferred by whether parentOrigin is set.
-    let initializeCalled = false;
-    let currentWindow;
-    let parentWindow;
-    let parentOrigin;
-    let parentMessageQueue = [];
-    let childWindow;
-    let childOrigin;
-    let childMessageQueue = [];
-    let nextMessageId = 0;
-    let callbacks = {};
-    let frameContext;
-    let hostClientType;
-    let themeChangeHandler;
+    var initializeCalled = false;
+    var currentWindow;
+    var parentWindow;
+    var parentOrigin;
+    var parentMessageQueue = [];
+    var childWindow;
+    var childOrigin;
+    var childMessageQueue = [];
+    var nextMessageId = 0;
+    var callbacks = {};
+    var frameContext;
+    var hostClientType;
+    var themeChangeHandler;
     handlers["themeChange"] = handleThemeChange;
-    let fullScreenChangeHandler;
+    var fullScreenChangeHandler;
     handlers["fullScreenChange"] = handleFullScreenChange;
-    let backButtonPressHandler;
+    var backButtonPressHandler;
     handlers["backButtonPress"] = handleBackButtonPress;
     /**
      * Initializes the library. This must be called before any other SDK calls
@@ -73,7 +59,7 @@ var microsoftTeams;
         // Undocumented field used to mock the window for unit tests
         currentWindow = this._window || window;
         // Listen for messages post to our window
-        let messageListener = (evt) => processMessage(evt);
+        var messageListener = function (evt) { return processMessage(evt); };
         currentWindow.addEventListener("message", messageListener, false);
         // If we are in an iframe, our parent window is the one hosting us (i.e., window.parent); otherwise,
         // it's the window that opened us (i.e., window.opener)
@@ -85,8 +71,8 @@ var microsoftTeams;
             // Send the initialized message to any origin, because at this point we most likely don't know the origin
             // of the parent window, and this message contains no data that could pose a security risk.
             parentOrigin = "*";
-            let messageId = sendMessageRequest(parentWindow, "initialize", [version]);
-            callbacks[messageId] = (context, clientType) => {
+            var messageId = sendMessageRequest(parentWindow, "initialize", [version]);
+            callbacks[messageId] = function (context, clientType) {
                 frameContext = context;
                 hostClientType = clientType;
             };
@@ -95,7 +81,7 @@ var microsoftTeams;
             parentOrigin = null;
         }
         // Undocumented function used to clear state between unit tests
-        this._uninitialize = () => {
+        this._uninitialize = function () {
             if (frameContext) {
                 registerOnThemeChangeHandler(null);
                 registerFullScreenHandler(null);
@@ -128,7 +114,7 @@ var microsoftTeams;
      */
     function getContext(callback) {
         ensureInitialized();
-        let messageId = sendMessageRequest(parentWindow, "getContext");
+        var messageId = sendMessageRequest(parentWindow, "getContext");
         callbacks[messageId] = callback;
     }
     microsoftTeams.getContext = getContext;
@@ -188,8 +174,8 @@ var microsoftTeams;
      */
     function navigateBack() {
         ensureInitialized();
-        let messageId = sendMessageRequest(parentWindow, "navigateBack", []);
-        callbacks[messageId] = (success) => {
+        var messageId = sendMessageRequest(parentWindow, "navigateBack", []);
+        callbacks[messageId] = function (success) {
             if (!success) {
                 throw new Error("Back navigation is not supported in the current client or context.");
             }
@@ -206,10 +192,10 @@ var microsoftTeams;
      */
     function navigateCrossDomain(url) {
         ensureInitialized(frameContexts.content, frameContexts.settings, frameContexts.remove);
-        let messageId = sendMessageRequest(parentWindow, "navigateCrossDomain", [
+        var messageId = sendMessageRequest(parentWindow, "navigateCrossDomain", [
             url
         ]);
-        callbacks[messageId] = (success) => {
+        callbacks[messageId] = function (success) {
             if (!success) {
                 throw new Error("Cross-origin navigation is only supported for URLs matching the pattern registered in the manifest.");
             }
@@ -224,7 +210,7 @@ var microsoftTeams;
      */
     function getTabInstances(callback, tabInstanceParameters) {
         ensureInitialized();
-        let messageId = sendMessageRequest(parentWindow, "getTabInstances", [
+        var messageId = sendMessageRequest(parentWindow, "getTabInstances", [
             tabInstanceParameters
         ]);
         callbacks[messageId] = callback;
@@ -237,7 +223,7 @@ var microsoftTeams;
      */
     function getMruTabInstances(callback, tabInstanceParameters) {
         ensureInitialized();
-        let messageId = sendMessageRequest(parentWindow, "getMruTabInstances", [
+        var messageId = sendMessageRequest(parentWindow, "getMruTabInstances", [
             tabInstanceParameters
         ]);
         callbacks[messageId] = callback;
@@ -280,10 +266,10 @@ var microsoftTeams;
      */
     function navigateToTab(tabInstance) {
         ensureInitialized();
-        let messageId = sendMessageRequest(parentWindow, "navigateToTab", [
+        var messageId = sendMessageRequest(parentWindow, "navigateToTab", [
             tabInstance
         ]);
-        callbacks[messageId] = (success) => {
+        callbacks[messageId] = function (success) {
             if (!success) {
                 throw new Error("Invalid internalTabInstanceId and/or channelId were/was provided");
             }
@@ -294,10 +280,10 @@ var microsoftTeams;
      * Namespace to interact with the settings-specific part of the SDK.
      * This object is usable only on the settings frame.
      */
-    let settings;
+    var settings;
     (function (settings) {
-        let saveHandler;
-        let removeHandler;
+        var saveHandler;
+        var removeHandler;
         handlers["settings.save"] = handleSave;
         handlers["settings.remove"] = handleRemove;
         /**
@@ -318,7 +304,7 @@ var microsoftTeams;
          */
         function getSettings(callback) {
             ensureInitialized(frameContexts.settings, frameContexts.remove);
-            let messageId = sendMessageRequest(parentWindow, "settings.getSettings");
+            var messageId = sendMessageRequest(parentWindow, "settings.getSettings");
             callbacks[messageId] = callback;
         }
         settings.getSettings = getSettings;
@@ -359,7 +345,7 @@ var microsoftTeams;
         }
         settings.registerOnRemoveHandler = registerOnRemoveHandler;
         function handleSave(result) {
-            let saveEvent = new SaveEventImpl(result);
+            var saveEvent = new SaveEventImpl(result);
             if (saveHandler) {
                 saveHandler(saveEvent);
             }
@@ -372,29 +358,30 @@ var microsoftTeams;
          * @private
          * Hide from docs, since this class is not directly used.
          */
-        class SaveEventImpl {
-            constructor(result) {
+        var SaveEventImpl = /** @class */ (function () {
+            function SaveEventImpl(result) {
                 this.notified = false;
                 this.result = result ? result : {};
             }
-            notifySuccess() {
+            SaveEventImpl.prototype.notifySuccess = function () {
                 this.ensureNotNotified();
                 sendMessageRequest(parentWindow, "settings.save.success");
                 this.notified = true;
-            }
-            notifyFailure(reason) {
+            };
+            SaveEventImpl.prototype.notifyFailure = function (reason) {
                 this.ensureNotNotified();
                 sendMessageRequest(parentWindow, "settings.save.failure", [reason]);
                 this.notified = true;
-            }
-            ensureNotNotified() {
+            };
+            SaveEventImpl.prototype.ensureNotNotified = function () {
                 if (this.notified) {
                     throw new Error("The SaveEvent may only notify success or failure once.");
                 }
-            }
-        }
+            };
+            return SaveEventImpl;
+        }());
         function handleRemove() {
-            let removeEvent = new RemoveEventImpl();
+            var removeEvent = new RemoveEventImpl();
             if (removeHandler) {
                 removeHandler(removeEvent);
             }
@@ -407,35 +394,36 @@ var microsoftTeams;
          * @private
          * Hide from docs, since this class is not directly used.
          */
-        class RemoveEventImpl {
-            constructor() {
+        var RemoveEventImpl = /** @class */ (function () {
+            function RemoveEventImpl() {
                 this.notified = false;
             }
-            notifySuccess() {
+            RemoveEventImpl.prototype.notifySuccess = function () {
                 this.ensureNotNotified();
                 sendMessageRequest(parentWindow, "settings.remove.success");
                 this.notified = true;
-            }
-            notifyFailure(reason) {
+            };
+            RemoveEventImpl.prototype.notifyFailure = function (reason) {
                 this.ensureNotNotified();
                 sendMessageRequest(parentWindow, "settings.remove.failure", [reason]);
                 this.notified = true;
-            }
-            ensureNotNotified() {
+            };
+            RemoveEventImpl.prototype.ensureNotNotified = function () {
                 if (this.notified) {
                     throw new Error("The removeEvent may only notify success or failure once.");
                 }
-            }
-        }
+            };
+            return RemoveEventImpl;
+        }());
     })(settings = microsoftTeams.settings || (microsoftTeams.settings = {}));
     /**
      * Namespace to interact with the authentication-specific part of the SDK.
      * This object is used for starting or completing authentication flows.
      */
-    let authentication;
+    var authentication;
     (function (authentication) {
-        let authParams;
-        let authWindowMonitor;
+        var authParams;
+        var authWindowMonitor;
         handlers["authentication.authenticate.success"] = handleSuccess;
         handlers["authentication.authenticate.failure"] = handleFailure;
         /**
@@ -450,17 +438,17 @@ var microsoftTeams;
          * Initiates an authentication request, which opens a new window with the specified settings.
          */
         function authenticate(authenticateParameters) {
-            let authenticateParams = authenticateParameters !== undefined
+            var authenticateParams = authenticateParameters !== undefined
                 ? authenticateParameters
                 : authParams;
             ensureInitialized(frameContexts.content, frameContexts.settings, frameContexts.remove);
             if (hostClientType === hostClientTypes.desktop) {
                 // Convert any relative URLs into absolute URLs before sending them over to the parent window.
-                let link = document.createElement("a");
+                var link = document.createElement("a");
                 link.href = authenticateParams.url;
                 // Ask the parent window to open an authentication window with the parameters provided by the caller.
-                let messageId = sendMessageRequest(parentWindow, "authentication.authenticate", [link.href, authenticateParams.width, authenticateParams.height]);
-                callbacks[messageId] = (success, response) => {
+                var messageId = sendMessageRequest(parentWindow, "authentication.authenticate", [link.href, authenticateParams.width, authenticateParams.height]);
+                callbacks[messageId] = function (success, response) {
                     if (success) {
                         authenticateParams.successCallback(response);
                     }
@@ -485,8 +473,8 @@ var microsoftTeams;
          */
         function getAuthToken(authTokenRequest) {
             ensureInitialized();
-            let messageId = sendMessageRequest(parentWindow, "authentication.getAuthToken", [authTokenRequest.resources]);
-            callbacks[messageId] = (success, result) => {
+            var messageId = sendMessageRequest(parentWindow, "authentication.getAuthToken", [authTokenRequest.resources]);
+            callbacks[messageId] = function (success, result) {
                 if (success) {
                     authTokenRequest.successCallback(result);
                 }
@@ -504,8 +492,8 @@ var microsoftTeams;
          */
         function getUser(userRequest) {
             ensureInitialized();
-            let messageId = sendMessageRequest(parentWindow, "authentication.getUser");
-            callbacks[messageId] = (success, result) => {
+            var messageId = sendMessageRequest(parentWindow, "authentication.getUser");
+            callbacks[messageId] = function (success, result) {
                 if (success) {
                     userRequest.successCallback(result);
                 }
@@ -534,19 +522,19 @@ var microsoftTeams;
             // Close the previously opened window if we have one
             closeAuthenticationWindow();
             // Start with a sensible default size
-            let width = authParams.width || 600;
-            let height = authParams.height || 400;
+            var width = authParams.width || 600;
+            var height = authParams.height || 400;
             // Ensure that the new window is always smaller than our app's window so that it never fully covers up our app
             width = Math.min(width, currentWindow.outerWidth - 400);
             height = Math.min(height, currentWindow.outerHeight - 200);
             // Convert any relative URLs into absolute URLs before sending them over to the parent window
-            let link = document.createElement("a");
+            var link = document.createElement("a");
             link.href = authParams.url;
             // We are running in the browser, so we need to center the new window ourselves
-            let left = typeof currentWindow.screenLeft !== "undefined"
+            var left = typeof currentWindow.screenLeft !== "undefined"
                 ? currentWindow.screenLeft
                 : currentWindow.screenX;
-            let top = typeof currentWindow.screenTop !== "undefined"
+            var top = typeof currentWindow.screenTop !== "undefined"
                 ? currentWindow.screenTop
                 : currentWindow.screenY;
             left += currentWindow.outerWidth / 2 - width / 2;
@@ -585,12 +573,12 @@ var microsoftTeams;
             // - Keeps pinging the authentication window while it is open to re-establish
             //   contact with any pages along the authentication flow that need to communicate
             //   with us
-            authWindowMonitor = currentWindow.setInterval(() => {
+            authWindowMonitor = currentWindow.setInterval(function () {
                 if (!childWindow || childWindow.closed) {
                     handleFailure("CancelledByUser");
                 }
                 else {
-                    let savedChildOrigin = childOrigin;
+                    var savedChildOrigin = childOrigin;
                     try {
                         childOrigin = "*";
                         sendMessageRequest(childWindow, "ping");
@@ -601,14 +589,14 @@ var microsoftTeams;
                 }
             }, 100);
             // Set up an initialize-message handler that gives the authentication window its frame context
-            handlers["initialize"] = () => {
+            handlers["initialize"] = function () {
                 return [frameContexts.authentication, hostClientType];
             };
             // Set up a navigateCrossDomain message handler that blocks cross-domain re-navigation attempts
             // in the authentication window. We could at some point choose to implement this method via a call to
             // authenticationWindow.location.href = url; however, we would first need to figure out how to
             // validate the URL against the tab's list of valid domains.
-            handlers["navigateCrossDomain"] = (url) => {
+            handlers["navigateCrossDomain"] = function (url) {
                 return false;
             };
         }
@@ -626,7 +614,9 @@ var microsoftTeams;
                 result
             ]);
             // Wait for the message to be sent before closing the window
-            waitForMessageQueue(parentWindow, () => setTimeout(() => currentWindow.close(), 200));
+            waitForMessageQueue(parentWindow, function () {
+                return setTimeout(function () { return currentWindow.close(); }, 200);
+            });
         }
         authentication.notifySuccess = notifySuccess;
         /**
@@ -643,7 +633,9 @@ var microsoftTeams;
                 reason
             ]);
             // Wait for the message to be sent before closing the window
-            waitForMessageQueue(parentWindow, () => setTimeout(() => currentWindow.close(), 200));
+            waitForMessageQueue(parentWindow, function () {
+                return setTimeout(function () { return currentWindow.close(); }, 200);
+            });
         }
         authentication.notifyFailure = notifyFailure;
         function handleSuccess(result) {
@@ -676,7 +668,7 @@ var microsoftTeams;
          */
         function redirectIfWin32Outlook(callbackUrl, key, value) {
             if (callbackUrl) {
-                let link = document.createElement("a");
+                var link = document.createElement("a");
                 link.href = decodeURIComponent(callbackUrl);
                 if (link.host &&
                     link.host !== window.location.host &&
@@ -704,22 +696,26 @@ var microsoftTeams;
          * @param value - the fragment value
          */
         function updateUrlParameter(uri, key, value) {
-            let i = uri.indexOf("#");
-            let hash = i === -1 ? "#" : uri.substr(i);
+            var i = uri.indexOf("#");
+            var hash = i === -1 ? "#" : uri.substr(i);
             hash = hash + "&" + key + (value !== "" ? "=" + value : "");
             uri = i === -1 ? uri : uri.substr(0, i);
             return uri + hash;
         }
     })(authentication = microsoftTeams.authentication || (microsoftTeams.authentication = {}));
-    function ensureInitialized(...expectedFrameContexts) {
+    function ensureInitialized() {
+        var expectedFrameContexts = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            expectedFrameContexts[_i] = arguments[_i];
+        }
         if (!initializeCalled) {
             throw new Error("The library has not yet been initialized");
         }
         if (frameContext &&
             expectedFrameContexts &&
             expectedFrameContexts.length > 0) {
-            let found = false;
-            for (let i = 0; i < expectedFrameContexts.length; i++) {
+            var found = false;
+            for (var i = 0; i < expectedFrameContexts.length; i++) {
                 if (expectedFrameContexts[i] === frameContext) {
                     found = true;
                     break;
@@ -736,8 +732,8 @@ var microsoftTeams;
             return;
         }
         // Process only if the message is coming from a different window and a valid origin
-        let messageSource = evt.source || evt.originalEvent.source;
-        let messageOrigin = evt.origin || evt.originalEvent.origin;
+        var messageSource = evt.source || evt.originalEvent.source;
+        var messageOrigin = evt.origin || evt.originalEvent.origin;
         if (messageSource === currentWindow ||
             (messageOrigin !== currentWindow.location.origin &&
                 validOrigins.indexOf(messageOrigin.toLowerCase()) === -1)) {
@@ -780,8 +776,8 @@ var microsoftTeams;
     function handleParentMessage(evt) {
         if ("id" in evt.data) {
             // Call any associated callbacks
-            const message = evt.data;
-            const callback = callbacks[message.id];
+            var message = evt.data;
+            var callback = callbacks[message.id];
             if (callback) {
                 callback.apply(null, message.args);
                 // Remove the callback to ensure that the callback is called only once and to free up memory.
@@ -790,8 +786,8 @@ var microsoftTeams;
         }
         else if ("func" in evt.data) {
             // Delegate the request to the proper handler
-            const message = evt.data;
-            const handler = handlers[message.func];
+            var message = evt.data;
+            var handler = handlers[message.func];
             if (handler) {
                 // We don't expect any handler to respond at this point
                 handler.apply(this, message.args);
@@ -801,21 +797,25 @@ var microsoftTeams;
     function handleChildMessage(evt) {
         if ("id" in evt.data && "func" in evt.data) {
             // Try to delegate the request to the proper handler
-            const message = evt.data;
-            const handler = handlers[message.func];
+            var message_1 = evt.data;
+            var handler = handlers[message_1.func];
             if (handler) {
-                let result = handler.apply(this, message.args);
+                var result = handler.apply(this, message_1.args);
                 if (result) {
-                    sendMessageResponse(childWindow, message.id, Array.isArray(result) ? result : [result]);
+                    sendMessageResponse(childWindow, message_1.id, Array.isArray(result) ? result : [result]);
                 }
             }
             else {
                 // Proxy to parent
-                let messageId = sendMessageRequest(parentWindow, message.func, message.args);
+                var messageId = sendMessageRequest(parentWindow, message_1.func, message_1.args);
                 // tslint:disable-next-line:no-any
-                callbacks[messageId] = (...args) => {
+                callbacks[messageId] = function () {
+                    var args = [];
+                    for (var _i = 0; _i < arguments.length; _i++) {
+                        args[_i] = arguments[_i];
+                    }
                     if (childWindow) {
-                        sendMessageResponse(childWindow, message.id, args);
+                        sendMessageResponse(childWindow, message_1.id, args);
                     }
                 };
             }
@@ -836,14 +836,14 @@ var microsoftTeams;
                 : null;
     }
     function flushMessageQueue(targetWindow) {
-        let targetOrigin = getTargetOrigin(targetWindow);
-        let targetMessageQueue = getTargetMessageQueue(targetWindow);
+        var targetOrigin = getTargetOrigin(targetWindow);
+        var targetMessageQueue = getTargetMessageQueue(targetWindow);
         while (targetWindow && targetOrigin && targetMessageQueue.length > 0) {
             targetWindow.postMessage(targetMessageQueue.shift(), targetOrigin);
         }
     }
     function waitForMessageQueue(targetWindow, callback) {
-        let messageQueueMonitor = currentWindow.setInterval(() => {
+        var messageQueueMonitor = currentWindow.setInterval(function () {
             if (getTargetMessageQueue(targetWindow).length === 0) {
                 clearInterval(messageQueueMonitor);
                 callback();
@@ -853,8 +853,8 @@ var microsoftTeams;
     function sendMessageRequest(targetWindow, actionName, 
     // tslint:disable-next-line:no-any
     args) {
-        let request = createMessageRequest(actionName, args);
-        let targetOrigin = getTargetOrigin(targetWindow);
+        var request = createMessageRequest(actionName, args);
+        var targetOrigin = getTargetOrigin(targetWindow);
         // If the target window isn't closed and we already know its origin, send the message right away; otherwise,
         // queue the message and send it after the origin is established
         if (targetWindow && targetOrigin) {
@@ -868,8 +868,8 @@ var microsoftTeams;
     function sendMessageResponse(targetWindow, id, 
     // tslint:disable-next-line:no-any
     args) {
-        let response = createMessageResponse(id, args);
-        let targetOrigin = getTargetOrigin(targetWindow);
+        var response = createMessageResponse(id, args);
+        var targetOrigin = getTargetOrigin(targetWindow);
         if (targetWindow && targetOrigin) {
             targetWindow.postMessage(response, targetOrigin);
         }
@@ -893,35 +893,32 @@ var microsoftTeams;
      * Namespace to interact with the task module-specific part of the SDK.
      * This object is usable only on the content frame.
      */
-    let task;
-    (function (task) {
+    var tasks;
+    (function (tasks) {
         /**
-        * Allows an app to open the task module.
-        * @param taskInfo An object containing the parameters of the task module
-        * @param completionHandler Handler to call when the task module is completed
-        */
-        function start(taskInfo, completionHandler) {
+         * Allows an app to open the task module.
+         * @param taskInfo An object containing the parameters of the task module
+         * @param completionHandler Handler to call when the task module is completed
+         */
+        function startTask(taskInfo, completionHandler) {
             // Ensure that the tab content is initialized
             ensureInitialized(frameContexts.content);
-            let messageId = sendMessageRequest(parentWindow, "start", [taskInfo]);
+            var messageId = sendMessageRequest(parentWindow, "tasks.startTask", [
+                taskInfo
+            ]);
             callbacks[messageId] = completionHandler;
         }
-        task.start = start;
+        tasks.startTask = startTask;
         /**
-        * Complete the task module.
-        * @param result Contains the result to be sent to the bot or teh app. Typically a JSON object or a serialized version of it
-        * @param appId Helps to validate that the call originates from the same appId as the one that invoked the task module
-        */
-        function complete(result, appId) {
+         * Complete the task module.
+         * @param result Contains the result to be sent to the bot or the app. Typically a JSON object or a serialized version of it
+         * @param appIds Helps to validate that the call originates from the same appId as the one that invoked the task module
+         */
+        function completeTask(result, appIds) {
             // Ensure that the tab content is initialized
             ensureInitialized(frameContexts.content);
-            sendMessageRequest(parentWindow, "complete", [
-                result,
-                appId
-            ]);
+            sendMessageRequest(parentWindow, "tasks.completeTask", [result, appIds]);
         }
-        task.complete = complete;
-    })(task = microsoftTeams.task || (microsoftTeams.task = {}));
+        tasks.completeTask = completeTask;
+    })(tasks = microsoftTeams.tasks || (microsoftTeams.tasks = {}));
 })(microsoftTeams || (microsoftTeams = {}));
-
-//# sourceMappingURL=MicrosoftTeams.js.map

@@ -8,8 +8,8 @@ block content
           email: document.forms["customerForm"]["email"].value,
           favoriteBook: document.forms["customerForm"]["favoriteBook"].value
         }
-        microsoftTeams.task.complete(customerInfo, "bdc707d5-48e0-48f8-bbe7-6131e0565a4c");
-        return false;
+        microsoftTeams.tasks.completeTask(customerInfo, "bdc707d5-48e0-48f8-bbe7-6131e0565a4c");
+        return true;
     }
 
   div(class='font-semibold font-title') Enter new customer information:

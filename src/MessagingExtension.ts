@@ -24,14 +24,15 @@
 
 import * as builder from "botbuilder";
 import * as msteams from "botbuilder-teams";
+import { TeamsBot } from "./TeamsBot";
 import * as faker from "faker";
 
-export class MessagingExtension extends builder.UniversalBot {
+export class MessagingExtension extends TeamsBot {
     constructor(
         public _connector: msteams.TeamsChatConnector,
     )
     {
-        super(_connector);
+        super(_connector, null); // No bot settings to save
         this._connector.onQuery("getRandomText", this.generateRandomResponse);
     }
 
