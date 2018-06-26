@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/charlesprakash/msteams-nodejs-hello-world#readme",
   "dependencies": {
+    "async": "^2.6.1",
     "body-parser": "^1.18.2",
     "botbuilder": "^3.11.0",
     "botbuilder-teams": "^0.1.6",
