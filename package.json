@@ -1,7 +1,7 @@
 {
-  "name": "msteams-nodejs-hello-world",
+  "name": "msteams-task-module-test",
   "version": "1.0.0",
-  "description": "Microsoft Teams Node.js Hello World App. Start here to build your first app in Teams platform.",
+  "description": "Test app for testing the Teams task module",
   "scripts": {
     "start": "cd ./build/src && node app.js",
     "build": "gulp build",
@@ -10,18 +10,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/charlesprakash/msteams-nodejs-hello-world.git"
+    "url": "https://github.com/billbliss/msteams-sample-hello-world-nodejs-ts"
   },
   "author": "billbliss",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/charlesprakash/msteams-nodejs-hello-world/issues"
+    "url": "https://github.com/billbliss/msteams-sample-hello-world-nodejs-ts/issues"
   },
   "engines": {
     "node": ">=8.9.4 <10.0.0",
     "npm": ">=5.6.0"
   },
-  "homepage": "https://github.com/charlesprakash/msteams-nodejs-hello-world#readme",
+  "homepage": "https://github.com/billbliss/msteams-sample-hello-world-nodejs-ts/blob/master/README.md",
   "dependencies": {
     "async": "^2.6.1",
     "body-parser": "^1.18.2",
