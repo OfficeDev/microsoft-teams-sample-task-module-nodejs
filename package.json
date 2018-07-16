@@ -23,17 +23,20 @@
   },
   "homepage": "https://github.com/billbliss/msteams-sample-hello-world-nodejs-ts/blob/master/README.md",
   "dependencies": {
+    "adaptivecards": "^1.0.0",
     "async": "^2.6.1",
     "body-parser": "^1.18.2",
-    "botbuilder": "^3.11.0",
-    "botbuilder-teams": "^0.1.6",
+    "botbuilder": "^3.15.0",
+    "botbuilder-teams": "^0.1.7",
     "config": "^1.28.1",
     "express": "^4.16.2",
     "faker": "^4.1.0",
     "path": "^0.12.7",
     "pug": "^2.0.0-rc.4",
+    "request": "^2.87.0",
     "serve-favicon": "^2.5.0",
-    "winston": "^2.4.2"
+    "stjs": "0.0.5",
+    "winston": "^2.4.3"
   },
   "devDependencies": {
     "@types/config": "0.0.34",

@@ -88,7 +88,7 @@ gulp.task('build', ['clean', 'ts:lint', 'ts', 'statics:copy']);
  */
 gulp.task('generate-manifest', function() {
     gulp.src(['./public/images/*_icon.png', 'src/manifest.json'])
-        .pipe(zip('TeamsBuild.zip'))
+        .pipe(zip('TaskModule.zip'))
         .pipe(gulp.dest('manifest'));
 });
 

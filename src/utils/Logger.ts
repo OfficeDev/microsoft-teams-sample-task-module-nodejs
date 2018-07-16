@@ -21,9 +21,19 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import * as winston from "winston";
+/* import { Logger, transports } from "winston";
 
-export class Logger extends winston.Logger {
+export const logger = new Logger({
+    transports: [
+        new transports.Console({
+                timestamp: () => { return new Date().toLocaleTimeString(); },
+                colorize: (process.env.MONOCHROME_CONSOLE) ? false : true,
+                level: "debug",
+        }),
+    ],
+}); */
+
+/* export class Logger extends winston.Logger {
     constructor() {
         super();
         this.add(
@@ -41,4 +51,4 @@ export class Logger extends winston.Logger {
     }
 }
 
-export let logger = new Logger;
+export const logger = new Logger(); */

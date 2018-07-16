@@ -22,6 +22,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import * as builder from "botbuilder";
+import * as msteams from "botbuilder-teams";
+import * as utils from "./utils";
+import * as logger from "winston";
 import { RootDialog } from "./dialogs/RootDialog";
 
 export class TeamsBot extends builder.UniversalBot {
@@ -34,8 +37,40 @@ export class TeamsBot extends builder.UniversalBot {
         super(_connector, botSettings);
         this.set("persistentConversationData", true);
 
+        // Handle generic invokes
+        let teamsConnector = this._connector as msteams.TeamsChatConnector;
+        teamsConnector.onInvoke(async (event, cb) => {
+            try {
+                await this.onInvoke(event, cb);
+            } catch (e) {
+                logger.error("Invoke handler failed", e);
+                cb(e, null, 500);
+            }
+        });
+
         // Register dialogs
         new RootDialog().register(this);
+    }
 
+    // Handle incoming invoke
+    private async onInvoke(event: builder.IEvent, cb: (err: Error, body: any, status?: number) => void): Promise<void> {
+        let session = await utils.loadSessionAsync(this, event);
+        if (session) {
+            // Invokes don't participate in middleware
+
+            // Simulate a normal message and route it, but remember the original invoke message
+            let payload = (event as any).value;
+            let fakeMessage: any = {
+                ...event,
+                text: payload.command + " " + JSON.stringify(payload),
+                originalInvoke: event,
+            };
+
+            session.message = fakeMessage;
+            session.dispatch(session.sessionState, session.message, () => {
+                session.routeToActiveDialog();
+            });
+        }
+        cb(null, "");
     }
 }

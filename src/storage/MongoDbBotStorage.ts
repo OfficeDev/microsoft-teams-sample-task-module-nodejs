@@ -26,7 +26,7 @@ import * as async from "async";
 import * as builder from "botbuilder";
 import * as mongodb from "mongodb";
 import { IBotExtendedStorage } from "./BotExtendedStorage";
-import { logger } from "../utils/index";
+import * as logger from "winston";
 
 // tslint:disable-next-line:variable-name
 const Fields = {
