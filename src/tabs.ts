@@ -63,8 +63,8 @@ module.exports.setup = function(app: any): void {
         res.render("youtube");
     });
 
-    app.get("/powerapps", function(req: Request, res: Response): void {
-        res.render("powerapps");
+    app.get("/powerapp", function(req: Request, res: Response): void {
+        res.render("powerapp");
     });
 
     app.get("/customform", function(req: Request, res: Response): void {

@@ -1,6 +1,6 @@
 {
-    "$schema": "https://statics.teams.microsoft.com/sdk/v1.2/manifest/MicrosoftTeams.schema.json",
-    "manifestVersion": "1.2",
+    "$schema": "https://raw.githubusercontent.com/OfficeDev/microsoft-teams-app-schema/master/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.3",
     "version": "1.0.0",
     "id": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
     "packageName": "com.microsoft.teams.build2018",
@@ -15,20 +15,21 @@
         "outline": "outline_icon.png"
     },
     "name": {
-        "short": "Teams Build",
-        "full": "Sample app used for Build 2018 Sessions"
+        "short": "Task Module",
+        "full": "Task Module Test App"
     },
     "description": {
-        "short": "Teams demo app for Microsoft Build 2018",
-        "full": "This sample app provides a very simple app for Microsoft Teams. You can extend this to add more content and capabilities."
+        "short": "Demo/test app for the Task Module feature",
+        "full": "This app is used to test the task module feature."
     },
     "accentColor": "#020081",
     "configurableTabs": [
         {
-            "configurationUrl": "https://build2018.ngrok.io/configure",
+            "configurationUrl": "https://taskmoduletest.azurewebsites.net/configure",
             "canUpdateConfiguration": true,
             "scopes": [
-                "team"
+                "team",
+                "groupchat"
             ]
         }
     ],
@@ -36,8 +37,8 @@
         {
             "entityId": "com.microsoft.teams.build2018.taskmodule",
             "name": "Tasks!",
-            "contentUrl": "https://build2018.ngrok.io/taskmodule",
-            "websiteUrl": "https://build2018.ngrok.io/taskmodule",
+            "contentUrl": "https://taskmoduletest.azurewebsites.net/taskmodule",
+            "websiteUrl": "https://taskmoduletest.azurewebsites.net/taskmodule",
             "scopes": [
                 "personal"
             ]
@@ -48,7 +49,8 @@
             "botId": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
             "scopes": [
                 "team",
-                "personal"
+                "personal",
+                "groupchat"
             ]
         }
     ],
@@ -78,6 +80,6 @@
         "messageTeamMembers"
     ],
     "validDomains": [
-        "build2018.ngrok.io"
+        "taskmoduletest.azurewebsites.net"
     ]
 }

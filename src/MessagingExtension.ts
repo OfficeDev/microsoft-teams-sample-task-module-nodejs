@@ -29,11 +29,12 @@ import * as faker from "faker";
 
 export class MessagingExtension extends TeamsBot {
     constructor(
-        public _connector: msteams.TeamsChatConnector,
+        bot: TeamsBot,
     )
     {
-        super(_connector, null); // No bot settings to save
-        this._connector.onQuery("getRandomText", this.generateRandomResponse);
+        super(bot._connector, bot._botSettings);
+        // Cast as an msTeams.TeamsChatConnector and attach the onQuery event
+        (this._connector as msteams.TeamsChatConnector).onQuery("getRandomText", this.generateRandomResponse);
     }
 
     private generateRandomResponse(event: builder.IEvent, query: msteams.ComposeExtensionQuery, callback: any): void {

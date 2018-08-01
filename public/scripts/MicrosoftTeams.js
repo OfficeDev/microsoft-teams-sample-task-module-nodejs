@@ -1,3 +1,17 @@
+;(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  } else {
+    root.microsoftTeams = factory();
+  }
+}(this, function() {
+if (!String.prototype.startsWith) {
+    String.prototype.startsWith = function (search, pos) {
+        return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+    };
+}
 /**
  * This is the root namespace for the JavaScript SDK.
  */
@@ -11,8 +25,31 @@ var microsoftTeams;
         "https://int.teams.microsoft.com",
         "https://devspaces.skype.com",
         "https://ssauth.skype.com",
-        "http://dev.local" // local development
+        "http://dev.local",
+        "https://msft.spoppe.com",
+        "https://*.sharepoint.com",
+        "https://*.sharepoint-df.com",
+        "https://*.sharepointonline.com"
     ];
+    // This will return a reg expression a given url
+    function generateRegExpFromUrl(url) {
+        var urlRegExpPart = "^";
+        var urlParts = url.split(".");
+        for (var j = 0; j < urlParts.length; j++) {
+            urlRegExpPart += (j > 0 ? "[.]" : "") + urlParts[j].replace("*", "[^\/^.]+");
+        }
+        urlRegExpPart += "$";
+        return urlRegExpPart;
+    }
+    // This will return a reg expression for list of url
+    function generateRegExpFromUrls(urls) {
+        var urlRegExp = "";
+        for (var i = 0; i < urls.length; i++) {
+            urlRegExp += (i === 0 ? "" : "|") + generateRegExpFromUrl(urls[i]);
+        }
+        return new RegExp(urlRegExp);
+    }
+    var validOriginRegExp = generateRegExpFromUrls(validOrigins);
     var handlers = {};
     // Ensure these declarations stay in sync with the framework.
     var frameContexts = {
@@ -21,13 +58,103 @@ var microsoftTeams;
         authentication: "authentication",
         remove: "remove"
     };
-    var hostClientTypes = {
-        desktop: "desktop",
-        web: "web"
-    };
+    var HostClientTypes;
+    (function (HostClientTypes) {
+        HostClientTypes["desktop"] = "desktop";
+        HostClientTypes["web"] = "web";
+        HostClientTypes["android"] = "android";
+        HostClientTypes["ios"] = "ios";
+    })(HostClientTypes = microsoftTeams.HostClientTypes || (microsoftTeams.HostClientTypes = {}));
+    /**
+     * Namespace to interact with the menu-specific part of the SDK.
+     * This object is used to show View Configuration, Action Menu and Navigation Bar Menu.
+     */
+    var menus;
+    (function (menus) {
+        /**
+         * Represents information about menu item for Action Menu and Navigation Bar Menu.
+         */
+        var MenuItem = (function () {
+            function MenuItem() {
+                /**
+                 * State of the menu item
+                 */
+                this.enabled = true;
+            }
+            return MenuItem;
+        }());
+        menus.MenuItem = MenuItem;
+        /**
+         * Represents information about type of list to display in Navigation Bar Menu.
+         */
+        var MenuListType;
+        (function (MenuListType) {
+            MenuListType["dropDown"] = "dropDown";
+            MenuListType["popOver"] = "popOver";
+        })(MenuListType = menus.MenuListType || (menus.MenuListType = {}));
+        var navBarMenuItemPressHandler;
+        handlers["navBarMenuItemPress"] = handleNavBarMenuItemPress;
+        var actionMenuItemPressHandler;
+        handlers["actionMenuItemPress"] = handleActionMenuItemPress;
+        var viewConfigItemPressHandler;
+        handlers["setModuleView"] = handleViewConfigItemPress;
+        /**
+         * Registers list of view configurations and it's handler.
+         * Handler is responsible for listening selection of View Configuration.
+         * @param viewConfig List of view configurations. Minimum 1 value is required.
+         * @param handler The handler to invoke when the user selects view configuration.
+         */
+        function setUpViews(viewConfig, handler) {
+            ensureInitialized();
+            viewConfigItemPressHandler = handler;
+            sendMessageRequest(parentWindow, "setUpViews", [viewConfig]);
+        }
+        menus.setUpViews = setUpViews;
+        function handleViewConfigItemPress(id) {
+            if (!viewConfigItemPressHandler || !viewConfigItemPressHandler(id)) {
+                ensureInitialized();
+                sendMessageRequest(parentWindow, "viewConfigItemPress", [id]);
+            }
+        }
+        /**
+         * Used to set menu items on the Navigation Bar. If icon is available, icon will be shown, otherwise title will be shown.
+         * @param items List of MenuItems for Navigation Bar Menu.
+         * @param handler The handler to invoke when the user selects menu item.
+         */
+        function setNavBarMenu(items, handler) {
+            ensureInitialized();
+            navBarMenuItemPressHandler = handler;
+            sendMessageRequest(parentWindow, "setNavBarMenu", [items]);
+        }
+        menus.setNavBarMenu = setNavBarMenu;
+        function handleNavBarMenuItemPress(id) {
+            if (!navBarMenuItemPressHandler || !navBarMenuItemPressHandler(id)) {
+                ensureInitialized();
+                sendMessageRequest(parentWindow, "handleNavBarMenuItemPress", [id]);
+            }
+        }
+        /**
+         * Used to show Action Menu.
+         * @param params Parameters for Menu Parameters
+         * @param handler The handler to invoke when the user selects menu item.
+         */
+        function showActionMenu(params, handler) {
+            ensureInitialized();
+            actionMenuItemPressHandler = handler;
+            sendMessageRequest(parentWindow, "showActionMenu", [params]);
+        }
+        menus.showActionMenu = showActionMenu;
+        function handleActionMenuItemPress(id) {
+            if (!actionMenuItemPressHandler || !actionMenuItemPressHandler(id)) {
+                ensureInitialized();
+                sendMessageRequest(parentWindow, "handleActionMenuItemPress", [id]);
+            }
+        }
+    })(menus = microsoftTeams.menus || (microsoftTeams.menus = {}));
     // This indicates whether initialize was called (started).
     // It does not indicate whether initialization is complete. That can be inferred by whether parentOrigin is set.
     var initializeCalled = false;
+    var isFramelessWindow = false;
     var currentWindow;
     var parentWindow;
     var parentOrigin;
@@ -60,13 +187,20 @@ var microsoftTeams;
         currentWindow = this._window || window;
         // Listen for messages post to our window
         var messageListener = function (evt) { return processMessage(evt); };
-        currentWindow.addEventListener("message", messageListener, false);
         // If we are in an iframe, our parent window is the one hosting us (i.e., window.parent); otherwise,
         // it's the window that opened us (i.e., window.opener)
         parentWindow =
             currentWindow.parent !== currentWindow.self
                 ? currentWindow.parent
                 : currentWindow.opener;
+        if (!parentWindow) {
+            isFramelessWindow = true;
+            window.onNativeMessage = handleParentMessage;
+        }
+        else {
+            // For iFrame scenario, add listener to listen 'message'
+            currentWindow.addEventListener("message", messageListener, false);
+        }
         try {
             // Send the initialized message to any origin, because at this point we most likely don't know the origin
             // of the parent window, and this message contains no data that could pose a security risk.
@@ -93,6 +227,9 @@ var microsoftTeams;
             if (frameContext === frameContexts.remove) {
                 settings.registerOnRemoveHandler(null);
             }
+            if (!isFramelessWindow) {
+                currentWindow.removeEventListener("message", messageListener, false);
+            }
             initializeCalled = false;
             parentWindow = null;
             parentOrigin = null;
@@ -104,7 +241,7 @@ var microsoftTeams;
             callbacks = {};
             frameContext = null;
             hostClientType = null;
-            currentWindow.removeEventListener("message", messageListener, false);
+            isFramelessWindow = false;
         };
     }
     microsoftTeams.initialize = initialize;
@@ -248,7 +385,7 @@ var microsoftTeams;
      */
     function openFilePreview(filePreviewParameters) {
         ensureInitialized(frameContexts.content);
-        sendMessageRequest(parentWindow, "openFilePreview", [
+        var params = [
             filePreviewParameters.entityId,
             filePreviewParameters.title,
             filePreviewParameters.description,
@@ -256,10 +393,33 @@ var microsoftTeams;
             filePreviewParameters.objectUrl,
             filePreviewParameters.downloadUrl,
             filePreviewParameters.webPreviewUrl,
-            filePreviewParameters.webEditUrl
-        ]);
+            filePreviewParameters.webEditUrl,
+            filePreviewParameters.baseUrl,
+            filePreviewParameters.editFile,
+            filePreviewParameters.subEntityId
+        ];
+        sendMessageRequest(parentWindow, "openFilePreview", params);
     }
     microsoftTeams.openFilePreview = openFilePreview;
+    /**
+     * @private
+     * Hide from docs.
+     * ------
+     * Upload a custom App manifest directly to both team and personal scopes.
+     * This method works just for the first party Apps.
+     */
+    function uploadCustomApp(manifestBlob) {
+        ensureInitialized();
+        var messageId = sendMessageRequest(parentWindow, "uploadCustomApp", [
+            manifestBlob
+        ]);
+        callbacks[messageId] = function (success, result) {
+            if (!success) {
+                throw new Error(result);
+            }
+        };
+    }
+    microsoftTeams.uploadCustomApp = uploadCustomApp;
     /**
      * Navigates the Microsoft Teams app to the specified tab instance.
      * @param tabInstance The tab instance to navigate to.
@@ -358,7 +518,7 @@ var microsoftTeams;
          * @private
          * Hide from docs, since this class is not directly used.
          */
-        var SaveEventImpl = /** @class */ (function () {
+        var SaveEventImpl = (function () {
             function SaveEventImpl(result) {
                 this.notified = false;
                 this.result = result ? result : {};
@@ -394,7 +554,7 @@ var microsoftTeams;
          * @private
          * Hide from docs, since this class is not directly used.
          */
-        var RemoveEventImpl = /** @class */ (function () {
+        var RemoveEventImpl = (function () {
             function RemoveEventImpl() {
                 this.notified = false;
             }
@@ -442,7 +602,7 @@ var microsoftTeams;
                 ? authenticateParameters
                 : authParams;
             ensureInitialized(frameContexts.content, frameContexts.settings, frameContexts.remove);
-            if (hostClientType === hostClientTypes.desktop) {
+            if (hostClientType === HostClientTypes.desktop) {
                 // Convert any relative URLs into absolute URLs before sending them over to the parent window.
                 var link = document.createElement("a");
                 link.href = authenticateParams.url;
@@ -736,7 +896,7 @@ var microsoftTeams;
         var messageOrigin = evt.origin || evt.originalEvent.origin;
         if (messageSource === currentWindow ||
             (messageOrigin !== currentWindow.location.origin &&
-                validOrigins.indexOf(messageOrigin.toLowerCase()) === -1)) {
+                !validOriginRegExp.test(messageOrigin.toLowerCase()))) {
             return;
         }
         // Update our parent and child relationships based on this message
@@ -851,23 +1011,30 @@ var microsoftTeams;
         }, 100);
     }
     function sendMessageRequest(targetWindow, actionName, 
-    // tslint:disable-next-line:no-any
-    args) {
+        // tslint:disable-next-line: no-any
+        args) {
         var request = createMessageRequest(actionName, args);
-        var targetOrigin = getTargetOrigin(targetWindow);
-        // If the target window isn't closed and we already know its origin, send the message right away; otherwise,
-        // queue the message and send it after the origin is established
-        if (targetWindow && targetOrigin) {
-            targetWindow.postMessage(request, targetOrigin);
+        if (isFramelessWindow) {
+            if (currentWindow && currentWindow.nativeInterface) {
+                currentWindow.nativeInterface.framelessPostMessage(JSON.stringify(request));
+            }
         }
         else {
-            getTargetMessageQueue(targetWindow).push(request);
+            var targetOrigin = getTargetOrigin(targetWindow);
+            // If the target window isn't closed and we already know its origin, send the message right away; otherwise,
+            // queue the message and send it after the origin is established
+            if (targetWindow && targetOrigin) {
+                targetWindow.postMessage(request, targetOrigin);
+            }
+            else {
+                getTargetMessageQueue(targetWindow).push(request);
+            }
         }
         return request.id;
     }
     function sendMessageResponse(targetWindow, id, 
-    // tslint:disable-next-line:no-any
-    args) {
+        // tslint:disable-next-line:no-any
+        args) {
         var response = createMessageResponse(id, args);
         var targetOrigin = getTargetOrigin(targetWindow);
         if (targetWindow && targetOrigin) {
@@ -922,3 +1089,6 @@ var microsoftTeams;
         tasks.completeTask = completeTask;
     })(tasks = microsoftTeams.tasks || (microsoftTeams.tasks = {}));
 })(microsoftTeams || (microsoftTeams = {}));
+
+return microsoftTeams;
+}));

@@ -22,8 +22,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import * as builder from "botbuilder";
-import * as msteams from "botbuilder-teams";
 import * as constants from "../constants";
+import * as utils from "../utils";
+import * as logger from "winston";
+import * as config from "config";
+import { ACGeneratorDialog } from "./ACGenerator";
+import { renderACAttachment } from "../utils/AdaptiveCardUtils";
+import { cardTemplates, fetchTemplates } from "./CardTemplates";
 
 export class RootDialog extends builder.IntentDialog
 {
@@ -35,9 +40,11 @@ export class RootDialog extends builder.IntentDialog
     public register(bot: builder.UniversalBot): void {
         bot.dialog(constants.DialogId.Root, this);
 
-        this.onBegin((session, args, next) => { console.log("onDialogBegin called"); this.onDialogBegin(session, args, next); });
-        this.onDefault((session) => { console.log("onDefault called"); this.onMessageReceived(session); } );
-        console.log("register called for dialog: " + constants.DialogId.Root);
+        this.onBegin((session, args, next) => { logger.verbose("onDialogBegin called"); this.onDialogBegin(session, args, next); });
+        this.onDefault((session) => { logger.verbose("onDefault called"); this.onMessageReceived(session); } );
+        logger.verbose("register called for dialog: " + constants.DialogId.Root);
+        new ACGeneratorDialog(constants.DialogId.ACTester).register(bot, this);
+        this.matches(/actester/i, constants.DialogId.ACTester);
     }
 
     // Handle start of dialog
@@ -47,8 +54,53 @@ export class RootDialog extends builder.IntentDialog
 
     // Handle message
     private async onMessageReceived(session: builder.Session): Promise<void> {
-        // Message might contain @mentions which we would like to strip off in the response
-        let text = msteams.TeamsMessage.getTextWithoutMentions(session.message);
-        session.send("You said: %s", text);
+        if (session.message.text === "") {
+            console.log("Empty message received");
+            // This is a response from a generated AC card
+            if (session.message.value !== undefined) {
+                session.send("**Action.Submit results:** " + JSON.stringify(session.message.value));
+            }
+        }
+        else {
+            // Message might contain @mentions which we would like to strip off in the response
+            let text = utils.getTextWithoutMentions(session.message);
+
+            let appInfo = {
+                appId: config.get("bot.appId"),
+                appRoot: config.get("app.baseUri"),
+            };
+            let taskModuleUrls = {
+                url1: encodeURI(`https://teams.microsoft.com/l/task/${appInfo.appId}?url=${appInfo.appRoot}/youtube&height=large&width=large&title=${encodeURIComponent("Satya Nadella's Build 2018 Keynote")}`),
+                url2: encodeURI(`https://teams.microsoft.com/l/task/${appInfo.appId}?url=${appInfo.appRoot}/powerapps&height=large&width=large&title=${encodeURIComponent("PowerApp: Asset Checkout")}`),
+                url3: encodeURI(`https://teams.microsoft.com/l/task/${appInfo.appId}?url=${appInfo.appRoot}/customform&height=medium&width=medium&title=${encodeURIComponent("Custom Form")}`),
+            };
+
+            let cardData: any = {
+                title: "Task Module",
+                subTitle: "Task Module Test Card",
+                instructions: "Click on the buttons below below to open task modules in various ways.",
+                linkbutton1: constants.TaskModuleStrings.YouTubeName,
+                url1: taskModuleUrls.url1,
+                markdown1: `[${constants.TaskModuleStrings.YouTubeName}](${taskModuleUrls.url1})`,
+                linkbutton2: constants.TaskModuleStrings.PowerAppName,
+                url2: taskModuleUrls.url2,
+                markdown2: `[${constants.TaskModuleStrings.PowerAppName}](${taskModuleUrls.url2})`,
+                linkbutton3: constants.TaskModuleStrings.CustomFormName,
+                url3: taskModuleUrls.url3,
+                markdown3: `[${constants.TaskModuleStrings.CustomFormName}](${taskModuleUrls.url3})`,
+                fetchButtonId1: `${constants.TaskModuleIds.YouTube}`,
+                fetchButtonTitle1: `${constants.TaskModuleStrings.YouTubeName}`,
+                fetchButtonId2: `${constants.TaskModuleIds.PowerApp}`,
+                fetchButtonTitle2: `${constants.TaskModuleStrings.PowerAppName}`,
+                fetchButtonId3: `${constants.TaskModuleIds.CustomForm}`,
+                fetchButtonTitle3: `${constants.TaskModuleStrings.CustomFormName}`,
+                taskFetchJSON: `**${constants.TaskModuleStrings.YouTubeName}:** ${JSON.stringify(fetchTemplates[constants.TaskModuleIds.YouTube])}\r**${constants.TaskModuleStrings.PowerAppName}:** ${JSON.stringify(fetchTemplates[constants.TaskModuleIds.PowerApp])}\r**${constants.TaskModuleStrings.CustomFormName}:** ${JSON.stringify(fetchTemplates[constants.TaskModuleIds.CustomForm])}`,
+            };
+
+            session.send(new builder.Message(session).addAttachment(
+                renderACAttachment(cardTemplates.taskModule, cardData),
+            ));
+            // session.send("You said: %s", text);
+        }
     }
 }

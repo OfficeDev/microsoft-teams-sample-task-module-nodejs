@@ -6,8 +6,8 @@ var server = require('gulp-develop-server');
 var mocha = require('gulp-spawn-mocha');
 var sourcemaps = require('gulp-sourcemaps');
 var zip = require('gulp-zip');
-var rename = require('gulp-rename');
-var jsonTransform = require('gulp-json-transform');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
 var path = require('path');
 var minimist = require('minimist');
 var fs = require('fs');
@@ -28,7 +28,10 @@ var tsProject = ts.createProject('./tsconfig.json', {
 
 var filesToWatch = ['**/*.ts', '!node_modules/**'];
 var filesToLint = ['**/*.ts', '!src/typings/**', '!node_modules/**'];
-var staticFiles = ['src/**/*.json', 'src/**/*.pug', '!manifest.json'];
+var staticFiles = ['src/**/*.json', 'src/**/*.pug', '!src/manifest.json'];
+var clientJS = 'build/src/TaskModuleTab.js';
+var bundledJS = 'bundle.js';
+var msTeamsLib = './node_modules/@microsoft/teams-js/dist/MicrosoftTeams.js';
 
 /**
  * Clean build output.
@@ -79,17 +82,64 @@ gulp.task('statics:copy', ['clean'], function () {
 });
 
 /**
+ * Copy (generated) client TypeScript files to the /scripts directory
+ */
+// gulp.task('client-js', function() {
+//     var browserified = transform(function(filename) {
+//         var b = browserify(filename);
+//         return b.bundle();
+//     });
+
+//     return gulp.src(clientJS)
+//         .pipe(browserified)
+//         // Flatten directory structure of built files
+//         .pipe(rename({dirname: ''}))
+//         .pipe(gulp.dest('./public/scripts'));
+// });
+gulp.task('client-js', ['ts'], function() {
+    var bundler = browserify({
+        entries: clientJS,
+        ignoreMissing: true,
+        debug: false
+    });
+
+    var bundle = function() {
+        return bundler
+            .bundle()
+            .on('.error', function() {})
+            .pipe(source(bundledJS))
+            .pipe(gulp.dest('./public/scripts'));
+    };
+
+    if (global.isWatching) {
+        bundler = watchify(bundler);
+        bundler.on('update', bundle)
+    }
+
+    return  bundle();
+});
+
+/**
  * Build application.
  */
-gulp.task('build', ['clean', 'ts:lint', 'ts', 'statics:copy']);
+gulp.task('build', ['clean', 'ts:lint', 'ts', 'client-js', 'statics:copy']);
 
 /**
  * Build manifest
  */
 gulp.task('generate-manifest', function() {
     gulp.src(['./public/images/*_icon.png', 'src/manifest.json'])
-        .pipe(zip('TeamsBuild.zip'))
+        .pipe(zip('TaskModule.zip'))
         .pipe(gulp.dest('manifest'));
+});
+
+/**
+ * Build debug version of the manifest - 
+ */
+gulp.task('generate-manifest-debug', function() {
+    gulp.src(['./public/images/*_icon.png', 'manifest/debug/manifest.json'])
+        .pipe(zip('TaskModuleDebug.zip'))
+        .pipe(gulp.dest('manifest/debug'));
 });
 
 /**

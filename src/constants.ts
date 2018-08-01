@@ -29,6 +29,7 @@ export const invokeType = "invoke";
 // tslint:disable-next-line:variable-name
 export const DialogId = {
     Root: "/",
+    ACTester: "actester",
 };
 
 // Telemetry events
@@ -36,4 +37,26 @@ export const DialogId = {
 export const TelemetryEvent = {
     UserActivity: "UserActivity",
     BotActivity: "BotActivity",
+};
+
+// Task Module Strings
+// tslint:disable-next-line:variable-name
+export const TaskModuleStrings = {
+    YouTubeTitle: "Satya Nadella's Build 2018 Keynote",
+    PowerAppTitle: "PowerApp: Asset Checkout",
+    CustomFormTitle: "Custom Form",
+    AdaptiveCardTitle: "Adaptive Card: Inputs",
+    YouTubeName: "YouTube",
+    PowerAppName: "PowerApp",
+    CustomFormName: "Custom Form",
+    AdaptiveCard: "Adaptive Card",
+};
+
+// Task Module Ids
+// tslint:disable-next-line:variable-name
+export const TaskModuleIds = {
+    YouTube: "youtube",
+    PowerApp: "powerapp",
+    CustomForm: "customform",
+    AdaptiveCard: "adaptivecard",
 };

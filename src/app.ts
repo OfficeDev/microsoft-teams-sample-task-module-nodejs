@@ -26,13 +26,17 @@ import * as express from "express";
 import * as favicon from "serve-favicon";
 import * as bodyParser from "body-parser";
 import * as path from "path";
+import * as logger from "winston";
+import * as winston from "winston";
 import * as builder from "botbuilder";
 import * as msteams from "botbuilder-teams";
 import * as config from "config";
 import * as storage from "./storage";
-import { logger } from "./utils/index";
 import { TeamsBot } from "./TeamsBot";
-import { MessagingExtension } from "./MessagingExtension";
+// import { MessagingExtension } from "./MessagingExtension";
+
+// initLogger();
+winston.verbose("hello world");
 
 let app = express();
 app.set("port", process.env.PORT || 3333);
@@ -65,8 +69,8 @@ let botSettings = {
 };
 let bot = new TeamsBot(connector as builder.ChatConnector, botSettings);
 
-// Adding a messaging extension to our app
-let messagingExtension = new MessagingExtension(connector);
+// Adding a messaging extension to our bot
+// let messagingExtension = new MessagingExtension(bot);
 
 // Set up route for the bot to listen.
 // NOTE: This endpoint cannot be changed and must be api/messages
@@ -74,7 +78,7 @@ app.post("/api/messages", connector.listen());
 
 // Log bot errors
 bot.on("error", (error: Error) => {
-    console.log(error.message);
+    logger.error(error.message);
 });
 
 // Adding tabs to our app. This will setup routes to various views
@@ -90,4 +94,29 @@ app.get("/ping", (req, res) => {
 app.listen(app.get("port"), function(): void {
     console.log("Express server listening on port " + app.get("port"));
     console.log("Bot messaging endpoint: " + config.get("app.baseUri") + "/api/messages");
+
+    logger.verbose("Express server listening on port " + app.get("port"));
+    logger.verbose("Bot messaging endpoint: " + config.get("app.baseUri") + "/api/messages");
 });
+
+function initLogger(): void {
+
+    logger.addColors({
+        error: "red",
+        warn:  "yellow",
+        info:  "green",
+        verbose: "cyan",
+        debug: "blue",
+        silly: "magenta",
+    });
+
+    logger.remove(logger.transports.Console);
+    logger.add(logger.transports.Console,
+        {
+            timestamp: () => { return new Date().toLocaleTimeString(); },
+            colorize: (process.env.MONOCHROME_CONSOLE) ? false : true,
+            prettyPrint: true,
+            level: "debug",
+        },
+    );
+}
