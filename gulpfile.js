@@ -84,18 +84,6 @@ gulp.task('statics:copy', ['clean'], function () {
 /**
  * Copy (generated) client TypeScript files to the /scripts directory
  */
-// gulp.task('client-js', function() {
-//     var browserified = transform(function(filename) {
-//         var b = browserify(filename);
-//         return b.bundle();
-//     });
-
-//     return gulp.src(clientJS)
-//         .pipe(browserified)
-//         // Flatten directory structure of built files
-//         .pipe(rename({dirname: ''}))
-//         .pipe(gulp.dest('./public/scripts'));
-// });
 gulp.task('client-js', ['ts'], function() {
     var bundler = browserify({
         entries: clientJS,

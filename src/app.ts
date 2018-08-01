@@ -38,6 +38,9 @@ import { TeamsBot } from "./TeamsBot";
 // initLogger();
 winston.verbose("hello world");
 
+// initLogger();
+winston.verbose("hello world");
+
 let app = express();
 app.set("port", process.env.PORT || 3333);
 app.use(express.static(path.join(__dirname, "../../public")));
