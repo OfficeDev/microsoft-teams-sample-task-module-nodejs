@@ -1,6 +1,15 @@
 import * as microsoftTeams from "@microsoft/teams-js";
 import * as constants from "./constants";
-import { cardTemplates } from "./dialogs/CardTemplates";
+import { cardTemplates, appRoot } from "./dialogs/CardTemplates";
+import { taskModuleLink } from "./utils/DeepLinks";
+
+// Helper function for generating an adaptive card attachment
+function acAttachment(ac: any): any {
+    return {
+        contentType: "application/vnd.microsoft.card.adaptive",
+        content: ac,
+    };
+}
 
 // Set the desired theme
 function setTheme(theme: string): void {
@@ -64,7 +73,6 @@ document.addEventListener("DOMContentLoaded", function(): void {
     let taskModuleButtons = document.getElementsByClassName("taskModuleButton");
 
     // Initialize deep links
-    let appRoot = `${window.location.protocol}//${window.location.host}/`;
     let taskInfo = {
         appId: "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
         title: null,
@@ -74,48 +82,51 @@ document.addEventListener("DOMContentLoaded", function(): void {
         card: null,
     };
     let deepLink = document.getElementById("dlYouTube") as HTMLAnchorElement;
-    deepLink.href = encodeURI(`https://teams.microsoft.com/l/task/${taskInfo.appId}?url=${appRoot}youtube&height=${taskInfo.height}&width=${taskInfo.width}&title=${encodeURIComponent("Satya Nadella's Build 2018 Keynote")}`);
+    deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}`);
     deepLink = document.getElementById("dlPowerApps") as HTMLAnchorElement;
-    deepLink.href = encodeURI(`https://teams.microsoft.com/l/task/${taskInfo.appId}?url=${appRoot}powerapps&height=${taskInfo.height}&width=${taskInfo.width}&title=${encodeURIComponent("PowerApp: Asset Checkout")}`);
+    deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.PowerAppTitle, constants.TaskModuleSizes.powerapp.height, constants.TaskModuleSizes.powerapp.width, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`);
     deepLink = document.getElementById("dlCustomForm") as HTMLAnchorElement;
-    deepLink.href = encodeURI(`https://teams.microsoft.com/l/task/${taskInfo.appId}?url=${appRoot}customform&height=medium&width=medium&title=${encodeURIComponent("Custom Form")}`);
+    deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.CustomFormTitle, constants.TaskModuleSizes.customform.height, constants.TaskModuleSizes.customform.width, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`);
     deepLink = document.getElementById("dlAdaptiveCard") as HTMLAnchorElement;
-    deepLink.href = encodeURI(`https://teams.microsoft.com/l/task/${taskInfo.appId}?height=large&width=medium&card=${encodeURIComponent(cardTemplates.adaptiveCard)}`);
+    deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.AdaptiveCardTitle, constants.TaskModuleSizes.adaptivecard.height, constants.TaskModuleSizes.adaptivecard.width, null, cardTemplates.adaptivecard);
 
     for (let btn of taskModuleButtons) {
         btn.addEventListener("click",
             function (): void {
-                taskInfo.url = appRoot + this.id.toLowerCase();
+                taskInfo.url = `${appRoot()}/${this.id.toLowerCase()}`;
                 let completionHandler = (err: string, result: any): void => { console.log("Result: " + result); };
                 switch (this.id.toLowerCase()) {
                     case constants.TaskModuleIds.YouTube:
                         taskInfo.title = constants.TaskModuleStrings.YouTubeTitle;
-                        taskInfo.height = "large";
-                        taskInfo.width = "large";
+                        taskInfo.height = constants.TaskModuleSizes.youtube.height;
+                        taskInfo.width = constants.TaskModuleSizes.youtube.width;
                         microsoftTeams.tasks.startTask(taskInfo, completionHandler);
                         break;
                     case constants.TaskModuleIds.PowerApp:
                         taskInfo.title = constants.TaskModuleStrings.PowerAppTitle;
-                        taskInfo.height = "large";
-                        taskInfo.width = "large";
+                        taskInfo.height = constants.TaskModuleSizes.powerapp.height;
+                        taskInfo.width = constants.TaskModuleSizes.powerapp.width;
                         microsoftTeams.tasks.startTask(taskInfo, completionHandler);
                         break;
                     case constants.TaskModuleIds.CustomForm:
                         taskInfo.title = constants.TaskModuleStrings.CustomFormTitle;
-                        taskInfo.height = "medium";
-                        taskInfo.width = "medium";
+                        taskInfo.height = constants.TaskModuleSizes.customform.height;
+                        taskInfo.width = constants.TaskModuleSizes.customform.width;
+                        completionHandler = (err: string, result: any): void => {
+                            console.log(`Completion Handler\nName: ${result.name}\rEmail: ${result.email}\rFavorite book: ${result.favoriteBook}`);
+                        };
                         microsoftTeams.tasks.startTask(taskInfo, completionHandler);
                         break;
-                    case constants.TaskModuleIds.AdaptiveCard:
+                    case constants.TaskModuleIds.AdaptiveCard1:
                         taskInfo.title = constants.TaskModuleStrings.AdaptiveCardTitle;
                         taskInfo.url = null;
-                        taskInfo.height = "large";
-                        taskInfo.width = "medium";
-                        taskInfo.card = cardTemplates.adaptiveCard;
+                        taskInfo.height = constants.TaskModuleSizes.adaptivecard.height;
+                        taskInfo.width = constants.TaskModuleSizes.adaptivecard.width;
+                        taskInfo.card = acAttachment(cardTemplates.adaptiveCard);
                         microsoftTeams.tasks.startTask(taskInfo, completionHandler);
                         break;
                     default:
-                        console.log("Unexpected button ID");
+                        console.log("Unexpected button ID: " + this.id.toLowerCase());
                         return;
                 }
                 console.log("URL: " + taskInfo.url);

@@ -33,7 +33,7 @@ import * as msteams from "botbuilder-teams";
 import * as config from "config";
 import * as storage from "./storage";
 import { TeamsBot } from "./TeamsBot";
-// import { MessagingExtension } from "./MessagingExtension";
+import { MessagingExtension } from "./MessagingExtension";
 
 // initLogger();
 winston.verbose("hello world");
@@ -73,7 +73,7 @@ let botSettings = {
 let bot = new TeamsBot(connector as builder.ChatConnector, botSettings);
 
 // Adding a messaging extension to our bot
-// let messagingExtension = new MessagingExtension(bot);
+let messagingExtension = new MessagingExtension(bot);
 
 // Set up route for the bot to listen.
 // NOTE: This endpoint cannot be changed and must be api/messages

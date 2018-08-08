@@ -29,6 +29,7 @@ import * as constants from "./constants";
 import * as config from "config";
 import { RootDialog } from "./dialogs/RootDialog";
 import { fetchTemplates } from "./dialogs/CardTemplates";
+import { renderACAttachment } from "./utils";
 
 export class TeamsBot extends builder.UniversalBot {
 
@@ -61,26 +62,32 @@ export class TeamsBot extends builder.UniversalBot {
         if (session) {
             // Invokes don't participate in middleware
 
-            // If the message is not task/fetch, simulate a normal message and route it, but remember the original invoke message
-            let payload = (event as any).value;
-            if (payload.type === undefined) {
-                payload.type = null;
+            // If the message is not task/*, simulate a normal message and route it, but remember the original invoke message
+            let invokeType = (event as any).name;
+            let invokeValue = (event as any).value;
+            if (invokeType === undefined) {
+                invokeType = null;
             }
-            switch (payload.type) {
+            switch (invokeType) {
                 case "task/fetch": {
-                    if (payload.taskModule !== undefined && fetchTemplates[payload.taskModule.toLowerCase()] !== undefined) {
+                    if (invokeValue !== undefined && fetchTemplates[invokeValue.taskModule.toLowerCase()] !== undefined) {
                         // Return the specified task module response to the bot
-                        cb(null, fetchTemplates[payload.taskModule.toLowerCase()], 200);
+                        cb(null, fetchTemplates[invokeValue.taskModule.toLowerCase()], 200);
                     }
                     else {
-                        console.log(`Error: task module template for ${(payload.taskModule === undefined ? "<undefined>" : payload.taskModule)} not found.`);
+                        console.log(`Error: task module template for ${(invokeValue.taskModule === undefined ? "<undefined>" : invokeValue.taskModule)} not found.`);
                     }
                     break;
                 }
+                case "task/complete":
+                    // Return HTTP 200 (OK) as the invoke response and echo the results to the chat stream
+                    cb(null, fetchTemplates.fetchCompleteResponse, 200);
+                    session.send("**task/complete results:** " + JSON.stringify(invokeValue));
+                    break;
                 case null: {
                     let fakeMessage: any = {
                         ...event,
-                        text: payload.command + " " + JSON.stringify(payload),
+                        text: invokeValue.command + " " + JSON.stringify(invokeValue),
                         originalInvoke: event,
                     };
 

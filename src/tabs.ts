@@ -23,6 +23,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import { Request, Response } from "express";
+import * as bodyParser from "body-parser";
 
 module.exports.setup = function(app: any): void {
     let path = require("path");
@@ -31,6 +32,11 @@ module.exports.setup = function(app: any): void {
     // Configure the view engine, views folder and the statics path
     app.set("view engine", "pug");
     app.set("views", path.join(__dirname, "views"));
+
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({
+        extended: true,
+    }));
 
     // Setup home page
     app.get("/", function(req: Request, res: Response): void {
@@ -69,5 +75,9 @@ module.exports.setup = function(app: any): void {
 
     app.get("/customform", function(req: Request, res: Response): void {
         res.render("customform");
+    });
+
+    app.post("/register", function(req: Request, res: Response): void {
+        console.log(`Form body:\nName: ${req.body.name}\nEmail: ${req.body.email}\nFavorite book: ${req.body.favoriteBook}\n`);
     });
 };

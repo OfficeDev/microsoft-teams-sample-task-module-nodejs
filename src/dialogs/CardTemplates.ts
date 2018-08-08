@@ -23,8 +23,10 @@
 
 import * as config from "config";
 import * as constants from "../constants";
+import { renderACAttachment } from "../utils";
 
-function appRoot(): string {
+// Function that works both in Node (where window === undefined) or the browser
+export function appRoot(): string {
     if (typeof window === "undefined") {
         return config.get("app.baseUri");
     } else {
@@ -98,6 +100,10 @@ export const cardTemplates: any = {
                                 {
                                     "title": "Button 3 URL",
                                     "value": "{{markdown3}}"
+                                },
+                                {
+                                    "title": "Button 4 URL",
+                                    "value": "{{markdown4}}"
                                 }
                             ]
                         },
@@ -121,8 +127,18 @@ export const cardTemplates: any = {
                         {
                             "type": "Action.OpenUrl",
                             "title": "{{linkbutton3}}",
-                            "url": "{{url3}"
-                        }
+                            "url": "{{url3}}"
+                        },
+                        {
+                            "type": "Action.OpenUrl",
+                            "title": "{{linkbutton4}}",
+                            "url": "{{url4}}"
+                        },
+                        {
+                            "type": "Action.OpenUrl",
+                            "title": "{{linkbutton5}}",
+                            "url": "{{url5}}"
+                        },
                     ]
                 }
             },
@@ -184,6 +200,28 @@ export const cardTemplates: any = {
                                     "type": "task/fetch"
                                 },
                                 "taskModule": "{{fetchButtonId3}}"
+                            }
+                        },
+                        {
+                            "type": "Action.Submit",
+                            "id": "{{fetchButtonId4}}",
+                            "title": "{{fetchButtonTitle4}}",
+                            "data": {
+                                "msteams": {
+                                    "type": "task/fetch"
+                                },
+                                "taskModule": "{{fetchButtonId4}}"
+                            }
+                        },
+                        {
+                            "type": "Action.Submit",
+                            "id": "{{fetchButtonId5}}",
+                            "title": "{{fetchButtonTitle5}}",
+                            "data": {
+                                "msteams": {
+                                    "type": "task/fetch"
+                                },
+                                "taskModule": "{{fetchButtonId5}}"
                             }
                         }
                     ]
@@ -436,6 +474,84 @@ export const cardTemplates: any = {
           }
         ]
     },
+    pollSetup: {
+        "type": "AdaptiveCard",
+        "body": [
+            {
+                "type": "TextBlock",
+                "id": "pollTitle",
+                "size": "Medium",
+                "weight": "Bolder",
+                "text": "Create Poll"
+            },
+            {
+                "type": "Container",
+                "id": "questionContainer",
+                "items": [
+                    {
+                        "type": "Input.Text",
+                        "id": "pollTitle",
+                        "separator": true,
+                        "value": "Poll Title",
+                        "placeholder": "Question text"
+                    },
+                    {
+                        "type": "TextBlock",
+                        "text": "Number of questions"
+                    },
+                    {
+                        "type": "Input.Number",
+                        "title": "New Input.Toggle",
+                        "value": "2",
+                        "placeholder": "Placeholder text"
+                    }
+                ]
+            }
+        ],
+        "version": "1.0"
+    },
+    questions: {
+        "type": "AdaptiveCard",
+        "body": [
+            {
+                "type": "TextBlock",
+                "id": "pollTitle",
+                "weight": "Bolder",
+                "text": "{{pollTitle}}"
+            },
+            {
+                "type": "Container",
+                "id": "questionContainer",
+                "items": [
+                    {
+                        "type": "TextBlock",
+                        "id": "q0Label",
+                        "text": "{{q0QuestionText}}"
+                    },
+                    {
+                        "type": "Input.Text",
+                        "id": "q0AnswerText",
+                        "separator": true,
+                        "value": "{{q0AnswerText}}",
+                        "placeholder": "Question text"
+                    },
+                    {
+                        "type": "TextBlock",
+                        "id": "q1Label",
+                        "text": "{{q1QuestionText}}"
+                    },
+                    {
+                        "type": "Input.Text",
+                        "id": "q1AnswerText",
+                        "separator": true,
+                        "value": "[[q1AnswerText}}",
+                        "placeholder": "Question text"
+                    }
+                ]
+            }
+        ],
+        "version": "1.0"
+    },
 };
 
 export const fetchTemplates: any = {
@@ -444,8 +560,8 @@ export const fetchTemplates: any = {
             "type": "continue",
             "value": {
                 "title": constants.TaskModuleStrings.YouTubeTitle,
-                "height": "large",
-                "width": "large",
+                "height": constants.TaskModuleSizes.youtube.height,
+                "width": constants.TaskModuleSizes.youtube.width,
                 "fallbackUrl": `${appRoot()}/${constants.TaskModuleIds.YouTube}`,
                 "url": `${appRoot()}/${constants.TaskModuleIds.YouTube}`,
             },
@@ -456,8 +572,8 @@ export const fetchTemplates: any = {
             "type": "continue",
             "value": {
                 "title": constants.TaskModuleStrings.PowerAppTitle,
-                "height": "large",
-                "width": "large",
+                "height": constants.TaskModuleSizes.powerapp.height,
+                "width": constants.TaskModuleSizes.powerapp.width,
                 "fallbackUrl": `${appRoot()}/${constants.TaskModuleIds.PowerApp}`,
                 "url": `${appRoot()}/${constants.TaskModuleIds.PowerApp}`,
             },
@@ -468,23 +584,44 @@ export const fetchTemplates: any = {
             "type": "continue",
             "value": {
                 "title": constants.TaskModuleStrings.CustomFormTitle,
-                "height": "medium",
-                "width": "small",
+                "height": constants.TaskModuleSizes.customform.height,
+                "width": constants.TaskModuleSizes.customform.width,
                 "fallbackUrl": `${appRoot()}/${constants.TaskModuleIds.CustomForm}`,
                 "url": `${appRoot()}/${constants.TaskModuleIds.CustomForm}`,
             },
         },
     },
-    adaptivecard: {
+    adaptivecard1: {
         "task": {
             "type": "continue",
             "value": {
                 "title": constants.TaskModuleStrings.AdaptiveCardTitle,
-                "height": "large",
-                "width": "small",
+                "height": constants.TaskModuleSizes.adaptivecard.height,
+                "width": constants.TaskModuleSizes.adaptivecard.width,
                 "fallbackUrl": null,
-                "card": cardTemplates.adaptiveCard,
+                // Below wraps it as a builder.Attachment
+                "card": renderACAttachment(cardTemplates.adaptiveCard, null),
             },
+        },
+    },
+    adaptivecard2: {
+        "task": {
+            "type": "continue",
+            "value": {
+                "title": constants.TaskModuleStrings.AdaptiveCardTitle,
+                "height": constants.TaskModuleSizes.adaptivecard.height,
+                "width": constants.TaskModuleSizes.adaptivecard.width,
+                "fallbackUrl": null,
+                // Below wraps it as a builder.Attachment
+                "card": renderACAttachment(cardTemplates.adaptiveCard, null),
+            },
+        },
+    },
+    fetchCompleteResponse: {
+        "task": {
+            "type": "message",
+            "value": "Task complete!",
+            // "value": "" // currently required until null response supported
         },
     },
 };

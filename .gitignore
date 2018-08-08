@@ -29,9 +29,6 @@ bower_components
 # node-waf configuration
 .lock-wscript
 
-# Build output
-build/
-
 # Dependency directories
 node_modules/
 jspm_packages/
@@ -58,5 +55,7 @@ typings/
 .env
 
 # Distributables
+build/
 dist/
 manifest/
+public/scripts/bundle.js

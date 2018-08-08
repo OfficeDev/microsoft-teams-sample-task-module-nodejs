@@ -28,7 +28,8 @@ import * as logger from "winston";
 import * as config from "config";
 import { ACGeneratorDialog } from "./ACGenerator";
 import { renderACAttachment } from "../utils/AdaptiveCardUtils";
-import { cardTemplates, fetchTemplates } from "./CardTemplates";
+import { cardTemplates, fetchTemplates, appRoot } from "./CardTemplates";
+import { taskModuleLink } from "../utils/DeepLinks";
 
 export class RootDialog extends builder.IntentDialog
 {
@@ -62,17 +63,19 @@ export class RootDialog extends builder.IntentDialog
             }
         }
         else {
+            // If the user says anything, return a card to kick off Task Module flows
             // Message might contain @mentions which we would like to strip off in the response
             let text = utils.getTextWithoutMentions(session.message);
 
             let appInfo = {
-                appId: config.get("bot.appId"),
-                appRoot: config.get("app.baseUri"),
+                appId: config.get("bot.appId") as string,
             };
             let taskModuleUrls = {
-                url1: encodeURI(`https://teams.microsoft.com/l/task/${appInfo.appId}?url=${appInfo.appRoot}/youtube&height=large&width=large&title=${encodeURIComponent("Satya Nadella's Build 2018 Keynote")}`),
-                url2: encodeURI(`https://teams.microsoft.com/l/task/${appInfo.appId}?url=${appInfo.appRoot}/powerapps&height=large&width=large&title=${encodeURIComponent("PowerApp: Asset Checkout")}`),
-                url3: encodeURI(`https://teams.microsoft.com/l/task/${appInfo.appId}?url=${appInfo.appRoot}/customform&height=medium&width=medium&title=${encodeURIComponent("Custom Form")}`),
+                url1: taskModuleLink(appInfo.appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}`),
+                url2: taskModuleLink(appInfo.appId, constants.TaskModuleStrings.PowerAppTitle, constants.TaskModuleSizes.powerapp.height, constants.TaskModuleSizes.powerapp.width, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`),
+                url3: taskModuleLink(appInfo.appId, constants.TaskModuleStrings.CustomFormTitle, constants.TaskModuleSizes.customform.height, constants.TaskModuleSizes.customform.width, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`),
+                url4: taskModuleLink(appInfo.appId, constants.TaskModuleStrings.AdaptiveCardTitle, constants.TaskModuleSizes.adaptivecard.height, constants.TaskModuleSizes.adaptivecard.width, null, cardTemplates.adaptiveCard),
+                url5: taskModuleLink(appInfo.appId, constants.TaskModuleStrings.AdaptiveCardTitle, constants.TaskModuleSizes.adaptivecard.height, constants.TaskModuleSizes.adaptivecard.width, null, cardTemplates.adaptiveCard),
             };
 
             let cardData: any = {
@@ -88,13 +91,25 @@ export class RootDialog extends builder.IntentDialog
                 linkbutton3: constants.TaskModuleStrings.CustomFormName,
                 url3: taskModuleUrls.url3,
                 markdown3: `[${constants.TaskModuleStrings.CustomFormName}](${taskModuleUrls.url3})`,
+                linkbutton4: constants.TaskModuleStrings.AdaptiveCardName,
+                url4: taskModuleUrls.url4,
+                markdown4: `[${constants.TaskModuleStrings.AdaptiveCardName}](${taskModuleUrls.url4})`,
+                url5: taskModuleUrls.url5,
+                markdown5: `[${constants.TaskModuleStrings.AdaptiveCardName}](${taskModuleUrls.url5})`,
+                linkbutton5: constants.TaskModuleStrings.AdaptiveCardName,
                 fetchButtonId1: `${constants.TaskModuleIds.YouTube}`,
-                fetchButtonTitle1: `${constants.TaskModuleStrings.YouTubeName}`,
                 fetchButtonId2: `${constants.TaskModuleIds.PowerApp}`,
-                fetchButtonTitle2: `${constants.TaskModuleStrings.PowerAppName}`,
                 fetchButtonId3: `${constants.TaskModuleIds.CustomForm}`,
+                fetchButtonId4: `${constants.TaskModuleIds.AdaptiveCard1}`,
+                fetchButtonId5: `${constants.TaskModuleIds.AdaptiveCard2}`,
+                fetchButtonTitle1: `${constants.TaskModuleStrings.YouTubeName}`,
+                fetchButtonTitle2: `${constants.TaskModuleStrings.PowerAppName}`,
                 fetchButtonTitle3: `${constants.TaskModuleStrings.CustomFormName}`,
-                taskFetchJSON: `**${constants.TaskModuleStrings.YouTubeName}:** ${JSON.stringify(fetchTemplates[constants.TaskModuleIds.YouTube])}\r**${constants.TaskModuleStrings.PowerAppName}:** ${JSON.stringify(fetchTemplates[constants.TaskModuleIds.PowerApp])}\r**${constants.TaskModuleStrings.CustomFormName}:** ${JSON.stringify(fetchTemplates[constants.TaskModuleIds.CustomForm])}`,
+                fetchButtonTitle4: `${constants.TaskModuleStrings.AdaptiveCardName}`,
+                fetchButtonTitle5: `${constants.TaskModuleStrings.AdaptiveCardName}`,
+                taskFetchJSON: `**${constants.TaskModuleStrings.YouTubeName}:** ${JSON.stringify(fetchTemplates[constants.TaskModuleIds.YouTube])}\r \
+                    **${constants.TaskModuleStrings.PowerAppName}:** ${JSON.stringify(fetchTemplates[constants.TaskModuleIds.PowerApp])}\r \
+                    **${constants.TaskModuleStrings.CustomFormName}:** ${JSON.stringify(fetchTemplates[constants.TaskModuleIds.CustomForm])}`,
             };
 
             session.send(new builder.Message(session).addAttachment(

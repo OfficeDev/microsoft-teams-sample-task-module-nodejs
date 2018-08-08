@@ -14,7 +14,7 @@ block content
 
   div(class='font-semibold font-title') Enter new customer information:
   form(method='POST' id="customerForm" action='/register' onSubmit="return validateForm()")
-    div(style="width: 50%")
+    div
       div.form-group(class="form-field-input" style="margin-bottom: 10px; margin-top: 10px")
       label(for='name') Name: 
       input#name.form-control.input-field(type='text', placeholder='first and last' name='name')

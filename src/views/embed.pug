@@ -1,0 +1,25 @@
+doctype html
+html(lang='en')
+  head
+  body
+    style.
+      body {
+        margin: 0;
+      }
+      #embed-container {
+        padding-top: 30px;
+        overflow: hidden; 
+      }
+      #embed-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 99%;
+        height: 99%;
+      }
+    div(id="embed-container")
+      //- script.
+      //-   var embedId = document.getElementById("embed-container");
+      //-   var aspectRatio = embedId.clientHeight/embedId.clientWidth;
+      //-   embedId.style.paddingBottom = aspectRatio + "%";
+      block iframe

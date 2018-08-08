@@ -49,7 +49,7 @@ export const TaskModuleStrings = {
     YouTubeName: "YouTube",
     PowerAppName: "PowerApp",
     CustomFormName: "Custom Form",
-    AdaptiveCard: "Adaptive Card",
+    AdaptiveCardName: "Adaptive Card",
 };
 
 // Task Module Ids
@@ -58,5 +58,39 @@ export const TaskModuleIds = {
     YouTube: "youtube",
     PowerApp: "powerapp",
     CustomForm: "customform",
-    AdaptiveCard: "adaptivecard",
+    AdaptiveCard1: "adaptivecard1",
+    AdaptiveCard2: "adaptivecard2",
+};
+
+// Task Module Sizes
+// tslint:disable-next-line:variable-name
+export const TaskModuleSizes = {
+    youtube: {
+        height: 80,
+        width: 80,
+    },
+    powerapp: {
+        height: 60,
+        width: 70,
+    },
+    customform: {
+        height: 35,
+        width: 30,
+    },
+    // youtube: {
+    //     height: 20,
+    //     width: 20,
+    // },
+    // powerapp: {
+    //     height: "medium",
+    //     width: "medium",
+    // },
+    // customform: {
+    //     height: "80",
+    //     width: "medium",
+    // },
+    adaptivecard: {
+        height: "large",
+        width: "medium",
+    },
 };
