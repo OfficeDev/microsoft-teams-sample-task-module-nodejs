@@ -447,7 +447,8 @@ export const cardTemplates: any = {
             "type": "Action.Submit",
             "title": "Submit",
             "data": {
-              "id": "1234567890"
+              "id": "1234567890",
+              "taskResponse": "{{responseType}}",
             }
           },
           {
@@ -467,7 +468,10 @@ export const cardTemplates: any = {
               "actions": [
                 {
                   "type": "Action.Submit",
-                  "title": "OK"
+                  "title": "OK",
+                  "data": {
+                    "taskResponse": "{{responseType}}",
+                  }
                 }
               ]
             }
@@ -552,6 +556,34 @@ export const cardTemplates: any = {
         ],
         "version": "1.0"
     },
+    acSubmitResponse: {
+        "type": "AdaptiveCard",
+        "body": [
+            {
+                "type": "TextBlock",
+                "weight": "Bolder",
+                "text": "Action.Submit Results"
+            },
+            {
+                "type": "TextBlock",
+                "separator": true,
+                "size": "Medium",
+                "text": "{{results}}",
+                "wrap": true
+            }
+        ],
+        "actions": [
+            {
+                "type": "Action.Submit",
+                "title": "OK",
+                "data": {
+                    "taskResponse": "final",
+                    "taskModule": "acResponse"
+                }
+            }
+        ],
+        "version": "1.0"
+    },
 };
 
 export const fetchTemplates: any = {
@@ -563,7 +595,7 @@ export const fetchTemplates: any = {
                 "height": constants.TaskModuleSizes.youtube.height,
                 "width": constants.TaskModuleSizes.youtube.width,
                 "fallbackUrl": `${appRoot()}/${constants.TaskModuleIds.YouTube}`,
-                "url": `${appRoot()}/${constants.TaskModuleIds.YouTube}`,
+                "url": `${appRoot()}/${constants.TaskModuleIds.YouTube}?${constants.UrlPlaceholders}`,
             },
         },
     },
@@ -575,7 +607,7 @@ export const fetchTemplates: any = {
                 "height": constants.TaskModuleSizes.powerapp.height,
                 "width": constants.TaskModuleSizes.powerapp.width,
                 "fallbackUrl": `${appRoot()}/${constants.TaskModuleIds.PowerApp}`,
-                "url": `${appRoot()}/${constants.TaskModuleIds.PowerApp}`,
+                "url": `${appRoot()}/${constants.TaskModuleIds.PowerApp}?${constants.UrlPlaceholders}`,
             },
         },
     },
@@ -587,7 +619,7 @@ export const fetchTemplates: any = {
                 "height": constants.TaskModuleSizes.customform.height,
                 "width": constants.TaskModuleSizes.customform.width,
                 "fallbackUrl": `${appRoot()}/${constants.TaskModuleIds.CustomForm}`,
-                "url": `${appRoot()}/${constants.TaskModuleIds.CustomForm}`,
+                "url": `${appRoot()}/${constants.TaskModuleIds.CustomForm}?${constants.UrlPlaceholders}`,
             },
         },
     },
@@ -598,9 +630,8 @@ export const fetchTemplates: any = {
                 "title": constants.TaskModuleStrings.AdaptiveCardTitle,
                 "height": constants.TaskModuleSizes.adaptivecard.height,
                 "width": constants.TaskModuleSizes.adaptivecard.width,
-                "fallbackUrl": null,
                 // Below wraps it as a builder.Attachment
-                "card": renderACAttachment(cardTemplates.adaptiveCard, null),
+                "card": renderACAttachment(cardTemplates.adaptiveCard, { responseType: "message" }),
             },
         },
     },
@@ -613,15 +644,32 @@ export const fetchTemplates: any = {
                 "width": constants.TaskModuleSizes.adaptivecard.width,
                 "fallbackUrl": null,
                 // Below wraps it as a builder.Attachment
-                "card": renderACAttachment(cardTemplates.adaptiveCard, null),
+                "card": renderACAttachment(cardTemplates.adaptiveCard, { responseType: "continue" }),
             },
         },
     },
-    fetchCompleteResponse: {
+    completeMessageResponse: {
         "task": {
             "type": "message",
             "value": "Task complete!",
-            // "value": "" // currently required until null response supported
         },
     },
+    // currently required until null response supported
+    completeNullResponse: {
+        "task": {
+            "type": "message",
+            "value": "",
+        },
+    },
+    completeSubmitResponse: {
+        "task": {
+            "type": "continue",
+            "value": {
+                "title": constants.TaskModuleStrings.ActionSubmitResponseTitle,
+                "height": "small",
+                "width": "medium",
+                "card": {},
+            },
+        },
+    }
 };

@@ -80,20 +80,21 @@ document.addEventListener("DOMContentLoaded", function(): void {
         width: null,
         url: null,
         card: null,
+        fallbackUrl: null,
     };
     let deepLink = document.getElementById("dlYouTube") as HTMLAnchorElement;
-    deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}`);
+    deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}?${constants.UrlPlaceholders}`, null, `${appRoot()}/${constants.TaskModuleIds.YouTube}`);
     deepLink = document.getElementById("dlPowerApps") as HTMLAnchorElement;
-    deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.PowerAppTitle, constants.TaskModuleSizes.powerapp.height, constants.TaskModuleSizes.powerapp.width, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`);
+    deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.PowerAppTitle, constants.TaskModuleSizes.powerapp.height, constants.TaskModuleSizes.powerapp.width, `${appRoot()}/${constants.TaskModuleIds.PowerApp}?${constants.UrlPlaceholders}`, null, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`);
     deepLink = document.getElementById("dlCustomForm") as HTMLAnchorElement;
-    deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.CustomFormTitle, constants.TaskModuleSizes.customform.height, constants.TaskModuleSizes.customform.width, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`);
+    deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.CustomFormTitle, constants.TaskModuleSizes.customform.height, constants.TaskModuleSizes.customform.width, `${appRoot()}/${constants.TaskModuleIds.CustomForm}?${constants.UrlPlaceholders}`, null, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`);
     deepLink = document.getElementById("dlAdaptiveCard") as HTMLAnchorElement;
     deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.AdaptiveCardTitle, constants.TaskModuleSizes.adaptivecard.height, constants.TaskModuleSizes.adaptivecard.width, null, cardTemplates.adaptivecard);
 
     for (let btn of taskModuleButtons) {
         btn.addEventListener("click",
             function (): void {
-                taskInfo.url = `${appRoot()}/${this.id.toLowerCase()}`;
+                taskInfo.url = `${appRoot()}/${this.id.toLowerCase()}?${constants.UrlPlaceholders}`;
                 let completionHandler = (err: string, result: any): void => { console.log("Result: " + result); };
                 switch (this.id.toLowerCase()) {
                     case constants.TaskModuleIds.YouTube:

@@ -39,6 +39,10 @@ export const TelemetryEvent = {
     BotActivity: "BotActivity",
 };
 
+// URL Placeholders
+// tslint:disable-next-line:variable-name
+export const UrlPlaceholders = "loginHint={loginHint}&upn={userPrincipalName}&aadId={userObjectId}&theme={theme}&groupId={groupId}&tenantId={tid}&locale={locale}&messageId={messageId}";
+
 // Task Module Strings
 // tslint:disable-next-line:variable-name
 export const TaskModuleStrings = {
@@ -46,6 +50,7 @@ export const TaskModuleStrings = {
     PowerAppTitle: "PowerApp: Asset Checkout",
     CustomFormTitle: "Custom Form",
     AdaptiveCardTitle: "Adaptive Card: Inputs",
+    ActionSubmitResponseTitle: "Action.Submit Response",
     YouTubeName: "YouTube",
     PowerAppName: "PowerApp",
     CustomFormName: "Custom Form",

@@ -28,7 +28,7 @@ import * as logger from "winston";
 import * as constants from "./constants";
 import * as config from "config";
 import { RootDialog } from "./dialogs/RootDialog";
-import { fetchTemplates } from "./dialogs/CardTemplates";
+import { fetchTemplates, cardTemplates } from "./dialogs/CardTemplates";
 import { renderACAttachment } from "./utils";
 
 export class TeamsBot extends builder.UniversalBot {
@@ -79,11 +79,29 @@ export class TeamsBot extends builder.UniversalBot {
                     }
                     break;
                 }
-                case "task/complete":
-                    // Return HTTP 200 (OK) as the invoke response and echo the results to the chat stream
-                    cb(null, fetchTemplates.fetchCompleteResponse, 200);
-                    session.send("**task/complete results:** " + JSON.stringify(invokeValue));
+                case "task/complete": {
+                    if (invokeValue.userInputs !== undefined) {
+                        // It's an adaptive card - userInputs is not to spec
+                        switch (invokeValue.userInputs.taskResponse) {
+                            case "message":
+                                // Return HTTP 200 (OK) as the invoke response and echo the results to the chat stream
+                                cb(null, fetchTemplates.completeNullResponse, 200);
+                                session.send("**task/complete results:** " + JSON.stringify(invokeValue));
+                                break;
+                            case "continue":
+                                let fetchResponse = fetchTemplates.completeSubmitResponse;
+                                fetchResponse.task.value.card = renderACAttachment(cardTemplates.acSubmitResponse, { results: JSON.stringify(invokeValue.userInputs) });
+                                cb(null, fetchResponse, 200);
+                                break;
+                            case "final":
+                                cb(null, fetchTemplates.completeNullResponse, 200);
+                                break;
+                            default:
+                                console.log("invalid task response.");
+                        }
+                    }
                     break;
+                }
                 case null: {
                     let fakeMessage: any = {
                         ...event,
