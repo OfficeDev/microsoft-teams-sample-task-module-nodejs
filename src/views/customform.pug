@@ -1,39 +1,46 @@
-extends layout.pug
+doctype html
+html(lang='en')
+  head
+    style.
+      body {
+        margin: 0;
+      }
+    title Microsoft Teams Task Module Tester - Custom Form
+    link(rel='stylesheet', type='text/css', href='/styles/msteams-16.css')
+    link(rel='stylesheet', type='text/css', href='/styles/custom.css')
+    script(src="https://unpkg.com/@microsoft/teams-js@1.3.3/dist/MicrosoftTeams.min.js" integrity="sha384-g1iQyAjC6TaAEj70a8TEV96chNDvgDxIjqEdppo/wph3gPqZ60d7lA1mxDUkAETe" crossorigin="anonymous")
+  body(class='theme-light')
+    script.
+      microsoftTeams.initialize();
 
-block content
-  script.
       function validateForm() {
-        var customerInfo = {
+        var result = {
           name: document.forms["customerForm"]["name"].value,
           email: document.forms["customerForm"]["email"].value,
           favoriteBook: document.forms["customerForm"]["favoriteBook"].value
         }
-        microsoftTeams.tasks.completeTask(customerInfo, "bdc707d5-48e0-48f8-bbe7-6131e0565a4c");
+        microsoftTeams.tasks.completeTask(result, ["bdc707d5-48e0-48f8-bbe7-6131e0565a4c"]);
         return true;
-    }
+      }
 
-  span(id="urlInfo" style="word-break: break-all")
-    script.
-      // Uncomment the below to see the URL Placeholder values
-      // document.getElementById("urlInfo").innerText = window.location.href;
-
-  div(class='font-semibold font-title') Enter new customer information:
-  form(method='POST' id="customerForm" action='/register' onSubmit="return validateForm()")
-    div
-      div.form-group(class="form-field-input" style="margin-bottom: 10px; margin-top: 10px")
-      label(for='name') Name: 
-      input#name.form-control.input-field(type='text', placeholder='first and last' name='name' tabindex=1 autofocus)
-      div.form-group(class="form-field-input" style="margin-bottom: 10px;")
-      label(for='email') Email: 
-      input#email.form-control.input-field(type='email', placeholder='name@email.com' name='email' tabindex=2)
-      div.form-group(class="form-field-input" style="margin-bottom: 10px;")
-      label(for='favoriteBook') Favorite book: 
-      input#favoriteBook.form-control.input-field(type='text', placeholder='title of book' name='favoriteBook' tabindex=3)
-      div.form-group(class="form-field-input" style="margin-bottom: 10px;")
-      label(for='pw') Password: 
-      input#pw.form-control.input-field(type='password' name='password' tabindex=4)
-      div.form-group(class="form-field-input" style="margin-bottom: 10px;")
-      label(for='pw2') Confirm password: 
-      input#pw2.form-control.input-field(type='password' name='confirmPassword' style="margin-bottom: 10px;" tabindex=4)
-      button.btn.button-primary(type='submit' tabindex=5) Sign up
-
+    div(class='surface')
+      div(class='panel')
+        div(class='font-semibold font-title') Enter new customer information:
+        form(method='POST' id="customerForm" action='/register' onSubmit="return validateForm()")
+          div
+            div.form-group(class="form-field-input" style="margin-bottom: 10px; margin-top: 10px")
+            label(for='name') Name: 
+            input#name.form-control.input-field(type='text', placeholder='first and last' name='name' tabindex=1 autofocus)
+            div.form-group(class="form-field-input" style="margin-bottom: 10px;")
+            label(for='email') Email: 
+            input#email.form-control.input-field(type='email', placeholder='name@email.com' name='email' tabindex=2)
+            div.form-group(class="form-field-input" style="margin-bottom: 10px;")
+            label(for='favoriteBook') Favorite book: 
+            input#favoriteBook.form-control.input-field(type='text', placeholder='title of book' name='favoriteBook' tabindex=3)
+            div.form-group(class="form-field-input" style="margin-bottom: 10px;")
+            label(for='pw') Password: 
+            input#pw.form-control.input-field(type='password' name='password' tabindex=4)
+            div.form-group(class="form-field-input" style="margin-bottom: 10px;")
+            label(for='pw2') Confirm password: 
+            input#pw2.form-control.input-field(type='password' name='confirmPassword' style="margin-bottom: 10px;" tabindex=4)
+            button.btn.button-primary(type='submit' tabindex=5) Sign up

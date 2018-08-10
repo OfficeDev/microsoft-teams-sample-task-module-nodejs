@@ -41,7 +41,7 @@ export const TelemetryEvent = {
 
 // URL Placeholders
 // tslint:disable-next-line:variable-name
-export const UrlPlaceholders = "loginHint={loginHint}&upn={userPrincipalName}&aadId={userObjectId}&theme={theme}&groupId={groupId}&tenantId={tid}&locale={locale}&messageId={messageId}";
+export const UrlPlaceholders = "loginHint={loginHint}&upn={userPrincipalName}&aadId={userObjectId}&theme={theme}&groupId={groupId}&tenantId={tid}&locale={locale}";
 
 // Task Module Strings
 // tslint:disable-next-line:variable-name
@@ -79,7 +79,7 @@ export const TaskModuleSizes = {
         width: 70,
     },
     customform: {
-        height: 35,
+        height: 40,
         width: 30,
     },
     // youtube: {

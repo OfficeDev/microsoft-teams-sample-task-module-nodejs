@@ -31,7 +31,7 @@ var filesToLint = ['**/*.ts', '!src/typings/**', '!node_modules/**'];
 var staticFiles = ['src/**/*.json', 'src/**/*.pug', '!src/manifest.json'];
 var clientJS = 'build/src/TaskModuleTab.js';
 var bundledJS = 'bundle.js';
-var msTeamsLib = './node_modules/@microsoft/teams-js/dist/MicrosoftTeams.js';
+var msTeamsLib = './node_modules/@microsoft/teams-js/dist/MicrosoftTeams.min.js';
 
 /**
  * Clean build output.
@@ -104,7 +104,7 @@ gulp.task('client-js', ['ts'], function() {
         bundler.on('update', bundle)
     }
 
-    return  bundle();
+    return bundle();
 });
 
 /**
