@@ -39,6 +39,6 @@ export function taskModuleLink(
             let cardOrUrl = (card === null) ? `url=${url}` : `card=${JSON.stringify(card)}`;
             let fallBack = (fallbackUrl === undefined) ? "" : `&fallbackUrl=${fallbackUrl}`;
             let completionBot = (completionBotId === undefined) ? "" : `&completionBotId=${completionBotId}`;
-            return(encodeURI(`https://teams.microsoft.com/l/task/${appId}?${cardOrUrl}&height=${height}&width=${width}&title=${title}${fallBack}${completionBot}&messageId={messageId}`));
+            return(encodeURI(`https://teams.microsoft.com/l/task/${appId}?${cardOrUrl}&height=${height}&width=${width}&title=${title}${fallBack}${completionBot}`));
         }
 }

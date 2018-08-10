@@ -14,12 +14,12 @@ html(lang='en')
       microsoftTeams.initialize();
 
       function validateForm() {
-        var result = {
+        var customerInfo = {
           name: document.forms["customerForm"]["name"].value,
           email: document.forms["customerForm"]["email"].value,
           favoriteBook: document.forms["customerForm"]["favoriteBook"].value
         }
-        microsoftTeams.tasks.completeTask(result, ["bdc707d5-48e0-48f8-bbe7-6131e0565a4c"]);
+        microsoftTeams.tasks.completeTask(customerInfo, ["bdc707d5-48e0-48f8-bbe7-6131e0565a4c"]);
         return true;
       }
 
