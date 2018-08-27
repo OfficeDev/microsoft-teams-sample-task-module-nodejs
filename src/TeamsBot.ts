@@ -58,6 +58,7 @@ export class TeamsBot extends builder.UniversalBot {
 
     // Handle incoming invoke
     private async onInvoke(event: builder.IEvent, cb: (err: Error, body: any, status?: number) => void): Promise<void> {
+        console.log(JSON.stringify(utils.getContext(event)));
         let session = await utils.loadSessionAsync(this, event);
         if (session) {
             // Invokes don't participate in middleware
@@ -79,14 +80,15 @@ export class TeamsBot extends builder.UniversalBot {
                     }
                     break;
                 }
+                case "task/submit":
                 case "task/complete": {
                     if (invokeValue.userInputs !== undefined) {
-                        // It's an adaptive card - userInputs is not to spec
+                        // It's a valid task module response - userInputs is not to spec
                         switch (invokeValue.userInputs.taskResponse) {
                             case "message":
                                 // Return HTTP 200 (OK) as the invoke response and echo the results to the chat stream
                                 cb(null, fetchTemplates.completeNullResponse, 200);
-                                session.send("**task/complete results:** " + JSON.stringify(invokeValue));
+                                session.send("**task/submit results from the adaptive card:** " + JSON.stringify(invokeValue));
                                 break;
                             case "continue":
                                 let fetchResponse = fetchTemplates.completeSubmitResponse;
@@ -97,7 +99,9 @@ export class TeamsBot extends builder.UniversalBot {
                                 cb(null, fetchTemplates.completeNullResponse, 200);
                                 break;
                             default:
-                                console.log("invalid task response.");
+                                // It's a response from an HTML task module
+                                cb(null, fetchTemplates.completeNullResponse, 200);
+                                session.send("**task/submit results from HTML:** " + JSON.stringify(invokeValue.userInputs));
                         }
                     }
                     break;

@@ -24,6 +24,7 @@
 
 import { Request, Response } from "express";
 import * as bodyParser from "body-parser";
+import * as config from "config";
 
 module.exports.setup = function(app: any): void {
     let path = require("path");
@@ -62,7 +63,8 @@ module.exports.setup = function(app: any): void {
     });
 
     app.get("/taskmodule", function(req: Request, res: Response): void {
-        res.render("taskmodule");
+        // Render the template, passing the appId so it's included in the rendered HTML
+        res.render("taskmodule", { appId: config.get("app.appId") });
     });
 
     app.get("/youtube", function(req: Request, res: Response): void {
@@ -74,10 +76,11 @@ module.exports.setup = function(app: any): void {
     });
 
     app.get("/customform", function(req: Request, res: Response): void {
-        res.render("customform");
+        // Render the template, passing the appId so it's included in the rendered HTML
+        res.render("customform", { appId: config.get("app.appId") });
     });
 
     app.post("/register", function(req: Request, res: Response): void {
-        console.log(`Form body:\nName: ${req.body.name}\nEmail: ${req.body.email}\nFavorite book: ${req.body.favoriteBook}\n`);
+        console.log(`Form body via HTTP POST:\nName: ${req.body.name}\nEmail: ${req.body.email}\nFavorite book: ${req.body.favoriteBook}\n`);
     });
 };

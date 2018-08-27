@@ -25,4 +25,4 @@
 
 // export * from "./Logger";
 export * from "./MessageUtils";
-export * from "./AdaptiveCardUtils";
+export * from "./CardUtils";

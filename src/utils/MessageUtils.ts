@@ -23,7 +23,7 @@
 
 import urlJoin = require("url-join");
 import * as builder from "botbuilder";
-import * as utils from "../utils";
+import * as utils from ".";
 import * as request from "request";
 import * as logger from "winston";
 
@@ -40,7 +40,7 @@ export function createMessage(session: builder.Session, text = "", textFormat = 
 
 // Get the channel id in the event
 export function getChannelId(event: builder.IEvent): string {
-    let sourceEvent = event.sourceEvent;
+    let sourceEvent = (event.sourceEvent !== undefined) ? event.sourceEvent : event;
     if (sourceEvent && sourceEvent.channel) {
         return sourceEvent.channel.id;
     }
@@ -50,7 +50,7 @@ export function getChannelId(event: builder.IEvent): string {
 
 // Get the team id in the event
 export function getTeamId(event: builder.IEvent): string {
-    let sourceEvent = event.sourceEvent;
+    let sourceEvent = (event.sourceEvent !== undefined) ? event.sourceEvent : event;
     if (sourceEvent && sourceEvent.team) {
         return sourceEvent.team.id;
     }
@@ -59,7 +59,7 @@ export function getTeamId(event: builder.IEvent): string {
 
 // Get the tenant id in the event
 export function getTenantId(event: builder.IEvent): string {
-    let sourceEvent = event.sourceEvent;
+    let sourceEvent = (event.sourceEvent !== undefined) ? event.sourceEvent : event;
     if (sourceEvent && sourceEvent.tenant) {
         return sourceEvent.tenant.id;
     }
@@ -304,4 +304,70 @@ export function loadSessionAsync(bot: builder.UniversalBot, event: builder.IEven
             }
         });
     });
+}
+
+// Helper function that mimics the getContext() call in the client SDK
+// @param BotBuilder.IEvent; if null, session.sourceEvent is used
+// @param BotBuilder.Session (used for full messages)
+//
+// Function uses either an event or a session object; if both are provided, the function returns an error string
+export function getContext(event: builder.IEvent, session?: builder.Session): any {
+    let entities: any = null;
+    if ((event !== undefined) && (session !== undefined)) {
+        return "Error: getContext() takes a builder.IEvent or builder.Session object as parameters, but not both.";
+    }
+    if (event === null) {
+        if (session === undefined) {
+            // Nothing was passed, return null
+            return null;
+        }
+        else {
+            // Use sourceEvent and entities array from the session object
+            event = session.message.sourceEvent;
+            entities = session.message.entities;
+        }
+    }
+    else {
+        // Use entities array from the event object
+        entities = (event as any).entities;
+    }
+    // Define context object and populate as much as possible using existing helper functions
+    let context: any = {
+        locale: null,
+        country: null,
+        platform: null,
+        timezone: null,
+        tenant: getTenantId(event),
+        teamsChannelId: getChannelId(event),
+        teamsTeamId: getTeamId(event),
+        userObjectId: null,
+        messageId: null,
+        conversationId: null,
+        conversationType: null,
+        theme: null,
+    };
+    // Populate locale, country, platform, timezone
+    if (entities !== undefined && entities.length) {
+        let clientInfo = entities.find(e => e.type && e.type === "clientInfo");
+        context.locale = clientInfo.locale;
+        context.country = clientInfo.country;
+        context.platform = clientInfo.platform;
+        context.timezone = clientInfo.timezone;
+    }
+    if (session !== undefined) {
+        // We have a builder.Session object
+        context.userObjectId = (session.message.address.user as any).aadObjectId;
+        context.messageId = (session.message.address as any).id;
+        context.conversationId = session.message.address.conversation.id;
+        context.conversationType = session.message.address.conversation.conversationType;
+    }
+    else {
+        // We have a builder.IEvent object
+        context.userObjectId = (event.address.user as any).aadObjectId;
+        context.messageId = (event.address as any).id;
+        context.conversationId = event.address.conversation.id;
+        context.conversationType = event.address.conversation.conversationType;
+    }
+
+    return context;
 }

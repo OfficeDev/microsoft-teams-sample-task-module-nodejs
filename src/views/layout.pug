@@ -12,9 +12,12 @@ html(lang='en')
     // script(src='/scripts/MicrosoftTeams.js')
     // script(src='/scripts/TaskModuleTab.js')
     script(src='/scripts/bundle.js') // bundled version of the above files
+    script.
+      let appId = "#{appId}";
     block scripts
 
   body(class='theme-light')
+    // span(id="appId" style="display: none") #{appId}
     div(class='surface')
       div(class='panel')
         block content

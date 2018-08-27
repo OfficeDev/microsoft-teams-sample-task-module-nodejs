@@ -25,7 +25,7 @@ import * as builder from "botbuilder";
 import * as constants from "../constants";
 import * as utils from "../utils";
 import { cardTemplates } from "./CardTemplates";
-import { renderACAttachment } from "../utils/AdaptiveCardUtils";
+import { renderACAttachment } from "../utils/CardUtils";
 
 // Dialog for the Adaptive Card tester
 export class ACGeneratorDialog extends builder.IntentDialog

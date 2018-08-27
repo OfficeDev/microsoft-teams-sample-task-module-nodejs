@@ -3,6 +3,8 @@ import * as constants from "./constants";
 import { cardTemplates, appRoot } from "./dialogs/CardTemplates";
 import { taskModuleLink } from "./utils/DeepLinks";
 
+declare var appId: any; // Injected at template render time
+
 // Helper function for generating an adaptive card attachment
 function acAttachment(ac: any): any {
     return {
@@ -78,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function(): void {
     if (taskModuleButtons.length > 0) {
         // Initialize deep links
         let taskInfo = {
-            appId: "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
+            appId: appId,
             title: null,
             height: null,
             width: null,
@@ -87,18 +89,18 @@ document.addEventListener("DOMContentLoaded", function(): void {
             fallbackUrl: null,
         };
         let deepLink = document.getElementById("dlYouTube") as HTMLAnchorElement;
-        deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}?${constants.UrlPlaceholders}`, null, `${appRoot()}/${constants.TaskModuleIds.YouTube}`);
+        deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}`, null, `${appRoot()}/${constants.TaskModuleIds.YouTube}`);
         deepLink = document.getElementById("dlPowerApps") as HTMLAnchorElement;
-        deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.PowerAppTitle, constants.TaskModuleSizes.powerapp.height, constants.TaskModuleSizes.powerapp.width, `${appRoot()}/${constants.TaskModuleIds.PowerApp}?${constants.UrlPlaceholders}`, null, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`);
+        deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.PowerAppTitle, constants.TaskModuleSizes.powerapp.height, constants.TaskModuleSizes.powerapp.width, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`, null, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`);
         deepLink = document.getElementById("dlCustomForm") as HTMLAnchorElement;
-        deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.CustomFormTitle, constants.TaskModuleSizes.customform.height, constants.TaskModuleSizes.customform.width, `${appRoot()}/${constants.TaskModuleIds.CustomForm}?${constants.UrlPlaceholders}`, null, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`);
+        deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.CustomFormTitle, constants.TaskModuleSizes.customform.height, constants.TaskModuleSizes.customform.width, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`, null, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`);
         deepLink = document.getElementById("dlAdaptiveCard") as HTMLAnchorElement;
         deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.AdaptiveCardTitle, constants.TaskModuleSizes.adaptivecard.height, constants.TaskModuleSizes.adaptivecard.width, null, cardTemplates.adaptiveCard);
 
         for (let btn of taskModuleButtons) {
             btn.addEventListener("click",
                 function (): void {
-                    taskInfo.url = `${appRoot()}/${this.id.toLowerCase()}?${constants.UrlPlaceholders}`;
+                    taskInfo.url = `${appRoot()}/${this.id.toLowerCase()}`;
                     let completionHandler = (err: string, result: any): void => { console.log("Result: " + result); };
                     switch (this.id.toLowerCase()) {
                         case constants.TaskModuleIds.YouTube:

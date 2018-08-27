@@ -138,7 +138,7 @@ export const cardTemplates: any = {
                             "type": "Action.OpenUrl",
                             "title": "{{linkbutton5}}",
                             "url": "{{url5}}"
-                        },
+                        }
                     ]
                 }
             },
@@ -152,19 +152,45 @@ export const cardTemplates: any = {
                         {
                             "type": "TextBlock",
                             "weight": "Bolder",
-                            "text": "task/fetch JSON"
+                            "text": "{{tfJsonTitle1}}"
                         },
                         {
                             "type": "TextBlock",
                             "spacing": "None",
                             "height": "stretch",
-                            "text": "{{taskFetchJSON}}",
+                            "text": "{{tfJson1}}",
                             "isSubtle": true,
                             "wrap": true
                         },
                         {
                             "type": "TextBlock",
-                            "text": "Click on the buttons below below to open a task module via `task/fetch`.",
+                            "weight": "Bolder",
+                            "text": "{{tfJsonTitle2}}"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "spacing": "None",
+                            "height": "stretch",
+                            "text": "{{tfJson2}}",
+                            "isSubtle": true,
+                            "wrap": true
+                        },
+                        {
+                            "type": "TextBlock",
+                            "weight": "Bolder",
+                            "text": "{{tfJsonTitle3}}"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "spacing": "None",
+                            "height": "stretch",
+                            "text": "{{tfJson3}}",
+                            "isSubtle": true,
+                            "wrap": true
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Click on the buttons below below to open a task module via task/fetch.",
                             "wrap": true
                         }
                     ],
@@ -584,6 +610,103 @@ export const cardTemplates: any = {
         ],
         "version": "1.0"
     },
+    bfThumbnailDeepLink: {
+        "contentType": "application/vnd.microsoft.card.thumbnail",
+        "content": {
+          "title": "{{title}}",
+          "subtitle": "{{subTitleDL}}",
+          "text": "{{instructionsDL}}",
+          "images": [
+            {
+              "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Wiki_puzzle_piece_blank.svg/951px-Wiki_puzzle_piece_blank.svg.png",
+              "alt": "Task Module Puzzle Piece"
+            }
+          ],
+          "buttons": [
+            {
+                "type": "openUrl",
+                "title": "{{linkbutton1}}",
+                "value": "{{url1}}"
+            },
+            {
+                "type": "openUrl",
+                "title": "{{linkbutton2}}",
+                "value": "{{url2}}"
+            },
+            {
+                "type": "openUrl",
+                "title": "{{linkbutton3}}",
+                "value": "{{url3}}"
+            },
+            {
+                "type": "openUrl",
+                "title": "{{linkbutton4}}",
+                "value": "{{url4}}"
+            },
+            {
+                "type": "openUrl",
+                "title": "{{linkbutton5}}",
+                "value": "{{url5}}"
+            },
+          ],
+        }
+    },
+    bfThumbnailTaskFetch: {
+        "contentType": "application/vnd.microsoft.card.thumbnail",
+        "content": {
+          "title": "{{title}}",
+          "subtitle": "{{subTitleTF}}",
+          "text": "{{instructionsTF}}",
+          "images": [
+            {
+              "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/81/Wiki_puzzle_piece_blank.svg/951px-Wiki_puzzle_piece_blank.svg.png",
+              "alt": "Task Module Puzzle Piece"
+            }
+          ],
+          "buttons": [
+            {
+                "type": "invoke",
+                "title": "{{fetchButtonTitle1}}",
+                "value": {
+                    "type": "task/fetch",
+                    "taskModule": "{{fetchButtonId1}}"
+                }
+            },
+            {
+                "type": "invoke",
+                "title": "{{fetchButtonTitle2}}",
+                "value": {
+                    "type": "task/fetch",
+                    "taskModule": "{{fetchButtonId2}}"
+                }
+            },
+            {
+                "type": "invoke",
+                "title": "{{fetchButtonTitle3}}",
+                "value": {
+                    "type": "task/fetch",
+                    "taskModule": "{{fetchButtonId3}}"
+                }
+            },
+            {
+                "type": "invoke",
+                "title": "{{fetchButtonTitle4}}",
+                "value": {
+                    "type": "task/fetch",
+                    "taskModule": "{{fetchButtonId4}}"
+                }
+            },
+            {
+                "type": "invoke",
+                "title": "{{fetchButtonTitle5}}",
+                "value": {
+                    "type": "task/fetch",
+                    "taskModule": "{{fetchButtonId5}}"
+                }
+            },
+          ],
+        }
+    },
 };
 
 export const fetchTemplates: any = {
@@ -595,7 +718,7 @@ export const fetchTemplates: any = {
                 "height": constants.TaskModuleSizes.youtube.height,
                 "width": constants.TaskModuleSizes.youtube.width,
                 "fallbackUrl": `${appRoot()}/${constants.TaskModuleIds.YouTube}`,
-                "url": `${appRoot()}/${constants.TaskModuleIds.YouTube}?${constants.UrlPlaceholders}`,
+                "url": `${appRoot()}/${constants.TaskModuleIds.YouTube}`,
             },
         },
     },
@@ -607,7 +730,7 @@ export const fetchTemplates: any = {
                 "height": constants.TaskModuleSizes.powerapp.height,
                 "width": constants.TaskModuleSizes.powerapp.width,
                 "fallbackUrl": `${appRoot()}/${constants.TaskModuleIds.PowerApp}`,
-                "url": `${appRoot()}/${constants.TaskModuleIds.PowerApp}?${constants.UrlPlaceholders}`,
+                "url": `${appRoot()}/${constants.TaskModuleIds.PowerApp}`,
             },
         },
     },
@@ -619,7 +742,7 @@ export const fetchTemplates: any = {
                 "height": constants.TaskModuleSizes.customform.height,
                 "width": constants.TaskModuleSizes.customform.width,
                 "fallbackUrl": `${appRoot()}/${constants.TaskModuleIds.CustomForm}`,
-                "url": `${appRoot()}/${constants.TaskModuleIds.CustomForm}?${constants.UrlPlaceholders}`,
+                "url": `${appRoot()}/${constants.TaskModuleIds.CustomForm}`,
             },
         },
     },

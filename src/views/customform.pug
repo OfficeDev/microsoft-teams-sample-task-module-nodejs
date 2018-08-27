@@ -13,16 +13,29 @@ html(lang='en')
     script.
       microsoftTeams.initialize();
 
+      function submit(result, appIds) {
+        if (typeof(appIds) === "string") {
+          // Turn it into an array as per current implementation
+          appIds = [appIds];
+        }
+        if (microsoftTeams.tasks.completeTask === undefined) {
+          microsoftTeams.tasks.submitTask(result, appIds);
+        }
+        if (microsoftTeams.tasks.submitTask === undefined) {
+          microsoftTeams.tasks.completeTask(result, appIds);
+        }
+      }
+
       function validateForm() {
         var customerInfo = {
           name: document.forms["customerForm"]["name"].value,
           email: document.forms["customerForm"]["email"].value,
           favoriteBook: document.forms["customerForm"]["favoriteBook"].value
         }
-        microsoftTeams.tasks.completeTask(customerInfo, ["bdc707d5-48e0-48f8-bbe7-6131e0565a4c"]);
+        // Change the line below to microsoftTeams.tasks.submitTask when SDK change is complete
+        submit(customerInfo, "#{appId}"); // appId is passed at render time in tabs.ts
         return true;
       }
-
     div(class='surface')
       div(class='panel')
         div(class='font-semibold font-title') Enter new customer information:

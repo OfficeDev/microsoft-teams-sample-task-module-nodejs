@@ -30,6 +30,7 @@ export const invokeType = "invoke";
 export const DialogId = {
     Root: "/",
     ACTester: "actester",
+    BFCard: "bfcard",
 };
 
 // Telemetry events
@@ -39,7 +40,7 @@ export const TelemetryEvent = {
     BotActivity: "BotActivity",
 };
 
-// URL Placeholders
+// URL Placeholders - not currently supported
 // tslint:disable-next-line:variable-name
 export const UrlPlaceholders = "loginHint={loginHint}&upn={userPrincipalName}&aadId={userObjectId}&theme={theme}&groupId={groupId}&tenantId={tid}&locale={locale}";
 
@@ -54,7 +55,8 @@ export const TaskModuleStrings = {
     YouTubeName: "YouTube",
     PowerAppName: "PowerApp",
     CustomFormName: "Custom Form",
-    AdaptiveCardName: "Adaptive Card",
+    AdaptiveCardInlineName: "Adaptive Card - Inline",
+    AdaptiveCardFlowName: "Adaptive Card - Flow",
 };
 
 // Task Module Ids
@@ -71,31 +73,19 @@ export const TaskModuleIds = {
 // tslint:disable-next-line:variable-name
 export const TaskModuleSizes = {
     youtube: {
-        height: 80,
-        width: 80,
+        width: 1000,
+        height: 700,
     },
     powerapp: {
-        height: 60,
-        width: 70,
+        width: 720,
+        height: 520,
     },
     customform: {
-        height: 40,
-        width: 30,
+        width: 510,
+        height: 430,
     },
-    // youtube: {
-    //     height: 20,
-    //     width: 20,
-    // },
-    // powerapp: {
-    //     height: "medium",
-    //     width: "medium",
-    // },
-    // customform: {
-    //     height: "80",
-    //     width: "medium",
-    // },
     adaptivecard: {
-        height: "large",
         width: "medium",
+        height: "large",
     },
 };
