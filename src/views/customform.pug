@@ -4,6 +4,8 @@ html(lang='en')
     style.
       body {
         margin: 0;
+        padding-left: 4px;
+        padding-right: 4px;
       }
     title Microsoft Teams Task Module Tester - Custom Form
     link(rel='stylesheet', type='text/css', href='/styles/msteams-16.css')
@@ -13,27 +15,13 @@ html(lang='en')
     script.
       microsoftTeams.initialize();
 
-      function submit(result, appIds) {
-        if (typeof(appIds) === "string") {
-          // Turn it into an array as per current implementation
-          appIds = [appIds];
-        }
-        if (microsoftTeams.tasks.completeTask === undefined) {
-          microsoftTeams.tasks.submitTask(result, appIds);
-        }
-        if (microsoftTeams.tasks.submitTask === undefined) {
-          microsoftTeams.tasks.completeTask(result, appIds);
-        }
-      }
-
       function validateForm() {
         var customerInfo = {
           name: document.forms["customerForm"]["name"].value,
           email: document.forms["customerForm"]["email"].value,
           favoriteBook: document.forms["customerForm"]["favoriteBook"].value
         }
-        // Change the line below to microsoftTeams.tasks.submitTask when SDK change is complete
-        submit(customerInfo, "#{appId}"); // appId is passed at render time in tabs.ts
+        microsoftTeams.tasks.submitTask(customerInfo, "#{appId}"); // appId is passed at render time in tabs.ts
         return true;
       }
     div(class='surface')

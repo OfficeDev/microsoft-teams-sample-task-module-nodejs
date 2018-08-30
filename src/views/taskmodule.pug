@@ -6,26 +6,27 @@ block content
   p Let's try it out!
     div(id="buttons" style="text-align: center; margin-left: auto; margin-right: auto")
       button(class="taskModuleButton button-primary" id="YouTube") YouTube (Teams SDK)
-      div <a id="dlYouTube" onclick="deepLinkAlert(event)">Deep Link</a>
+      div <a id="dlYouTube" class="deepLink")>Deep Link</a>
       p
       button(class="taskModuleButton button-primary" id="PowerApp") PowerApp (Teams SDK)
-      div <a id="dlPowerApps" onclick="deepLinkAlert(event)">Deep Link</a>
+      div <a id="dlPowerApps" class="deepLink")>Deep Link</a>
       p
       button(class="taskModuleButton button-primary" id="customform") Custom Form (Teams SDK)
-      div <a id="dlCustomForm" onclick="deepLinkAlert(event)">Deep Link</a>
+      div <a id="dlCustomForm" class="deepLink")>Deep Link</a>
       p
       button(class="taskModuleButton button-primary" id="adaptivecard1") Adaptive Card (Teams SDK)
-      div <a id="dlAdaptiveCard" onclick="deepLinkAlert(event)">Deep Link</a>
+      div <a id="dlAdaptiveCard" class="deepLink")>Deep Link</a>
   script.
     // Wire up event handler for the click event
-    document.getElementsByClassName("taskModuleButton").forEach(function(button) {
-      button.onmousedown = deepLinkAlert;
-    });
-
+    var deepLinks = document.getElementsByClassName("deepLink");
+    for (var i = 0; i < deepLinks.length; i++) {
+      deepLinks[i].onmousedown = deepLinkAlert;
+    };
+    // If the left button is clicked, show an error message
     function deepLinkAlert(event) {
-      // If the left button is clicked, show an error message
       if (event.which === 1) {
-        alert("Task module links can't be used from within a tab, but you can copy the link to the clipboard and use it from outside Teams.");
-        event.preventDefault();
+        event.stopPropagation();
+        // event.preventDefault();
+        alert("Task module links can't be used from within a tab, but you can right-click and copy the link to the clipboard and use it from outside Teams.");
       }
     }

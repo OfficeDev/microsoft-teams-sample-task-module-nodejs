@@ -101,28 +101,29 @@ document.addEventListener("DOMContentLoaded", function(): void {
             btn.addEventListener("click",
                 function (): void {
                     taskInfo.url = `${appRoot()}/${this.id.toLowerCase()}`;
-                    let completionHandler = (err: string, result: any): void => { console.log("Result: " + result); };
+                    let submitHandler = (err: string, result: any): void => { console.log(`Err: ${err}; Result:  + ${result}`); };
                     switch (this.id.toLowerCase()) {
                         case constants.TaskModuleIds.YouTube:
                             taskInfo.title = constants.TaskModuleStrings.YouTubeTitle;
                             taskInfo.height = constants.TaskModuleSizes.youtube.height;
                             taskInfo.width = constants.TaskModuleSizes.youtube.width;
-                            microsoftTeams.tasks.startTask(taskInfo, completionHandler);
+                            microsoftTeams.tasks.startTask(taskInfo, submitHandler);
                             break;
                         case constants.TaskModuleIds.PowerApp:
                             taskInfo.title = constants.TaskModuleStrings.PowerAppTitle;
                             taskInfo.height = constants.TaskModuleSizes.powerapp.height;
                             taskInfo.width = constants.TaskModuleSizes.powerapp.width;
-                            microsoftTeams.tasks.startTask(taskInfo, completionHandler);
+                            microsoftTeams.tasks.startTask(taskInfo, submitHandler);
                             break;
                         case constants.TaskModuleIds.CustomForm:
                             taskInfo.title = constants.TaskModuleStrings.CustomFormTitle;
                             taskInfo.height = constants.TaskModuleSizes.customform.height;
                             taskInfo.width = constants.TaskModuleSizes.customform.width;
-                            completionHandler = (err: string, result: any): void => {
-                                console.log(`Completion Handler\rName: ${result.name}\rEmail: ${result.email}\rFavorite book: ${result.favoriteBook}`);
+                            submitHandler = (err: string, result: any): void => {
+                                console.log(`Submit handler - err: ${err}`);
+                                console.log(`Submit handler - result\rName: ${result.name}\rEmail: ${result.email}\rFavorite book: ${result.favoriteBook}`);
                             };
-                            microsoftTeams.tasks.startTask(taskInfo, completionHandler);
+                            microsoftTeams.tasks.startTask(taskInfo, submitHandler);
                             break;
                         case constants.TaskModuleIds.AdaptiveCard1:
                             taskInfo.title = constants.TaskModuleStrings.AdaptiveCardTitle;

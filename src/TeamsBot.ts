@@ -29,7 +29,7 @@ import * as constants from "./constants";
 import * as config from "config";
 import { RootDialog } from "./dialogs/RootDialog";
 import { fetchTemplates, cardTemplates } from "./dialogs/CardTemplates";
-import { renderACAttachment } from "./utils";
+import { renderACAttachment, renderAdaptiveCard } from "./utils";
 
 export class TeamsBot extends builder.UniversalBot {
 
@@ -58,12 +58,9 @@ export class TeamsBot extends builder.UniversalBot {
 
     // Handle incoming invoke
     private async onInvoke(event: builder.IEvent, cb: (err: Error, body: any, status?: number) => void): Promise<void> {
-        console.log(JSON.stringify(utils.getContext(event)));
+        console.log("Context: " + JSON.stringify(utils.getContext(event)));
         let session = await utils.loadSessionAsync(this, event);
         if (session) {
-            // Invokes don't participate in middleware
-
-            // If the message is not task/*, simulate a normal message and route it, but remember the original invoke message
             let invokeType = (event as any).name;
             let invokeValue = (event as any).value;
             if (invokeType === undefined) {
@@ -85,13 +82,15 @@ export class TeamsBot extends builder.UniversalBot {
                         // It's a valid task module response
                         switch (invokeValue.data.taskResponse) {
                             case "message":
-                                // Return HTTP 200 (OK) as the invoke response and echo the results to the chat stream
-                                // cb(null, fetchTemplates.submitNullResponse, 200);
+                                // Echo the results to the chat stream
+                                // Returning a response to the invoke message is not necessary
                                 session.send("**task/submit results from the Adaptive Card:**\n```" + JSON.stringify(invokeValue) + "```");
                                 break;
                             case "continue":
                                 let fetchResponse = fetchTemplates.submitResponse;
                                 fetchResponse.task.value.card = renderACAttachment(cardTemplates.acSubmitResponse, { results: JSON.stringify(invokeValue.data) });
+                                session.send("**fetchResponse.task.value.card:**\n\n```" + JSON.stringify(fetchResponse.task.value.card) + "```");
+                                // fetchResponse.task.value.card = renderAdaptiveCard(cardTemplates.acSubmitResponse, { results: JSON.stringify(invokeValue.data) });
                                 cb(null, fetchResponse, 200);
                                 break;
                             case "final":
@@ -105,7 +104,9 @@ export class TeamsBot extends builder.UniversalBot {
                     }
                     break;
                 }
-                case null: {
+            // Invokes don't participate in middleware
+            // If the message is not task/*, simulate a normal message and route it, but remember the original invoke message
+            case null: {
                     let fakeMessage: any = {
                         ...event,
                         text: invokeValue.command + " " + JSON.stringify(invokeValue),

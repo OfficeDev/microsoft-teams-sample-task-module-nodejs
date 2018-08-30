@@ -23,6 +23,7 @@
 
 import * as builder from "botbuilder";
 import * as stjs from "stjs";
+import * as adaptiveCard from "adaptivecards";
 
 export function renderACAttachment(template: any, data: any): builder.AttachmentType {
     // ToDo:
@@ -52,6 +53,18 @@ export function renderBFAttachment(template: any, data: any): builder.Attachment
         .transformWith(template)
         .root();
     return bfCard;
+}
+
+export function renderAdaptiveCard(template: any, data: any): adaptiveCard.AdaptiveCard {
+    // Pre-process the template so that template placeholders don't show up for null data values
+    // Regex: Find everything between {{}} and prepend "#? " to it
+    template = JSON.parse(JSON.stringify(template).replace(/{{(.+?)}}/g, "{{#? $1}}"));
+
+    // No error handling in the call to stjs functions - what you pass in may be garbage, but it always returns a value
+    let ac = stjs.select(data)
+        .transformWith(template)
+        .root();
+    return ac;
 }
 
 // This function doesn't work as written (the async logic and error handling aren't right)
