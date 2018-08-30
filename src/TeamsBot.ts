@@ -80,28 +80,27 @@ export class TeamsBot extends builder.UniversalBot {
                     }
                     break;
                 }
-                case "task/submit":
-                case "task/complete": {
-                    if (invokeValue.userInputs !== undefined) {
-                        // It's a valid task module response - userInputs is not to spec
-                        switch (invokeValue.userInputs.taskResponse) {
+                case "task/submit": {
+                    if (invokeValue.data !== undefined) {
+                        // It's a valid task module response
+                        switch (invokeValue.data.taskResponse) {
                             case "message":
                                 // Return HTTP 200 (OK) as the invoke response and echo the results to the chat stream
-                                cb(null, fetchTemplates.completeNullResponse, 200);
-                                session.send("**task/submit results from the adaptive card:** " + JSON.stringify(invokeValue));
+                                // cb(null, fetchTemplates.submitNullResponse, 200);
+                                session.send("**task/submit results from the Adaptive Card:**\n```" + JSON.stringify(invokeValue) + "```");
                                 break;
                             case "continue":
-                                let fetchResponse = fetchTemplates.completeSubmitResponse;
-                                fetchResponse.task.value.card = renderACAttachment(cardTemplates.acSubmitResponse, { results: JSON.stringify(invokeValue.userInputs) });
+                                let fetchResponse = fetchTemplates.submitResponse;
+                                fetchResponse.task.value.card = renderACAttachment(cardTemplates.acSubmitResponse, { results: JSON.stringify(invokeValue.data) });
                                 cb(null, fetchResponse, 200);
                                 break;
                             case "final":
-                                cb(null, fetchTemplates.completeNullResponse, 200);
+                                // cb(null, fetchTemplates.submitNullResponse, 200);
                                 break;
                             default:
                                 // It's a response from an HTML task module
-                                cb(null, fetchTemplates.completeNullResponse, 200);
-                                session.send("**task/submit results from HTML:** " + JSON.stringify(invokeValue.userInputs));
+                                cb(null, fetchTemplates.submitMessageResponse, 200);
+                                session.send("**task/submit results from HTML:**\n\n```" + JSON.stringify(invokeValue.data) + "```");
                         }
                     }
                     break;

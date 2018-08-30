@@ -771,20 +771,20 @@ export const fetchTemplates: any = {
             },
         },
     },
-    completeMessageResponse: {
+    submitMessageResponse: {
         "task": {
             "type": "message",
             "value": "Task complete!",
         },
     },
     // currently required until null response supported
-    completeNullResponse: {
+    submitNullResponse: {
         "task": {
             "type": "message",
             "value": "",
         },
     },
-    completeSubmitResponse: {
+    submitResponse: {
         "task": {
             "type": "continue",
             "value": {

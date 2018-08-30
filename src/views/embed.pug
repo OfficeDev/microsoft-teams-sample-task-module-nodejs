@@ -6,6 +6,7 @@ html(lang='en')
       body {
         margin: 0;
       }
+      /*
       #embed-container {
         padding-top: 30px;
         overflow: hidden; 
@@ -17,9 +18,17 @@ html(lang='en')
         width: 99%;
         height: 99%;
       }
+      */
+      #embed-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 95%;
+        height: 95%;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+      }
     div(id="embed-container")
-      //- script.
-      //-   var embedId = document.getElementById("embed-container");
-      //-   var aspectRatio = embedId.clientHeight/embedId.clientWidth;
-      //-   embedId.style.paddingBottom = aspectRatio + "%";
       block iframe

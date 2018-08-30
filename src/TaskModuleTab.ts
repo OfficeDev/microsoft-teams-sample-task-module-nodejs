@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function(): void {
                             taskInfo.height = constants.TaskModuleSizes.adaptivecard.height;
                             taskInfo.width = constants.TaskModuleSizes.adaptivecard.width;
                             taskInfo.card = acAttachment(cardTemplates.adaptiveCard);
-                            microsoftTeams.tasks.startTask(taskInfo, completionHandler);
+                            microsoftTeams.tasks.startTask(taskInfo);
                             break;
                         default:
                             console.log("Unexpected button ID: " + this.id.toLowerCase());

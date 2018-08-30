@@ -93,7 +93,7 @@ export class BotFrameworkCard extends builder.IntentDialog
         };
 
         if (text === constants.DialogId.BFCard) {
-            // The user has typed "bfcard"
+            // The user has typed "bfcard" - send two cards, one illustrating deep link buttons, and one with task/fetch
             session.send(new builder.Message(session).addAttachment(
                 renderBFAttachment(cardTemplates.bfThumbnailDeepLink, cardData),
             ));
@@ -102,6 +102,5 @@ export class BotFrameworkCard extends builder.IntentDialog
             ));
         }
         session.endDialog();
-        // session.send("You said: %s", text);
     }
 }

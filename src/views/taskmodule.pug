@@ -6,15 +6,26 @@ block content
   p Let's try it out!
     div(id="buttons" style="text-align: center; margin-left: auto; margin-right: auto")
       button(class="taskModuleButton button-primary" id="YouTube") YouTube (Teams SDK)
-      div <a id="dlYouTube">Deep Link</a>
+      div <a id="dlYouTube" onclick="deepLinkAlert(event)">Deep Link</a>
       p
       button(class="taskModuleButton button-primary" id="PowerApp") PowerApp (Teams SDK)
-      div <a id="dlPowerApps">Deep Link</a>
+      div <a id="dlPowerApps" onclick="deepLinkAlert(event)">Deep Link</a>
       p
       button(class="taskModuleButton button-primary" id="customform") Custom Form (Teams SDK)
-      div <a id="dlCustomForm">Deep Link</a>
+      div <a id="dlCustomForm" onclick="deepLinkAlert(event)">Deep Link</a>
       p
       button(class="taskModuleButton button-primary" id="adaptivecard1") Adaptive Card (Teams SDK)
-      div <a id="dlAdaptiveCard">Deep Link</a>
+      div <a id="dlAdaptiveCard" onclick="deepLinkAlert(event)">Deep Link</a>
+  script.
+    // Wire up event handler for the click event
+    document.getElementsByClassName("taskModuleButton").forEach(function(button) {
+      button.onmousedown = deepLinkAlert;
+    });
 
-  p Deep link to bot: <a href="https://teams.microsoft.com/l/chat/0/0?users=28:bdc707d5-48e0-48f8-bbe7-6131e0565a4c" target="_blank">click here</a>
+    function deepLinkAlert(event) {
+      // If the left button is clicked, show an error message
+      if (event.which === 1) {
+        alert("Task module links can't be used from within a tab, but you can copy the link to the clipboard and use it from outside Teams.");
+        event.preventDefault();
+      }
+    }
