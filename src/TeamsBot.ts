@@ -25,8 +25,7 @@ import * as builder from "botbuilder";
 import * as msteams from "botbuilder-teams";
 import * as utils from "./utils";
 import * as logger from "winston";
-import * as constants from "./constants";
-import * as config from "config";
+
 import { RootDialog } from "./dialogs/RootDialog";
 import { fetchTemplates, cardTemplates } from "./dialogs/CardTemplates";
 import { renderACAttachment, renderAdaptiveCard } from "./utils";
@@ -58,7 +57,7 @@ export class TeamsBot extends builder.UniversalBot {
 
     // Handle incoming invoke
     private async onInvoke(event: builder.IEvent, cb: (err: Error, body: any, status?: number) => void): Promise<void> {
-        console.log("Context: " + JSON.stringify(utils.getContext(event)));
+        // console.log("Context: " + JSON.stringify(utils.getContext(event)));
         let session = await utils.loadSessionAsync(this, event);
         if (session) {
             let invokeType = (event as any).name;
@@ -73,7 +72,7 @@ export class TeamsBot extends builder.UniversalBot {
                         cb(null, fetchTemplates[invokeValue.taskModule.toLowerCase()], 200);
                     }
                     else {
-                        console.log(`Error: task module template for ${(invokeValue.taskModule === undefined ? "<undefined>" : invokeValue.taskModule)} not found.`);
+                        cb(new Error(`Error: task module template for ${(invokeValue.taskModule === undefined ? "<undefined>" : invokeValue.taskModule)} not found.`), null, 500);
                     }
                     break;
                 }
@@ -84,17 +83,15 @@ export class TeamsBot extends builder.UniversalBot {
                             case "message":
                                 // Echo the results to the chat stream
                                 // Returning a response to the invoke message is not necessary
-                                session.send("**task/submit results from the Adaptive Card:**\n```" + JSON.stringify(invokeValue) + "```");
+                                session.send("**task/submit results from the Adaptive card:**\n```" + JSON.stringify(invokeValue) + "```");
                                 break;
                             case "continue":
                                 let fetchResponse = fetchTemplates.submitResponse;
                                 fetchResponse.task.value.card = renderACAttachment(cardTemplates.acSubmitResponse, { results: JSON.stringify(invokeValue.data) });
-                                session.send("**fetchResponse.task.value.card:**\n\n```" + JSON.stringify(fetchResponse.task.value.card) + "```");
-                                // fetchResponse.task.value.card = renderAdaptiveCard(cardTemplates.acSubmitResponse, { results: JSON.stringify(invokeValue.data) });
                                 cb(null, fetchResponse, 200);
                                 break;
                             case "final":
-                                // cb(null, fetchTemplates.submitNullResponse, 200);
+                                // Don't show anything
                                 break;
                             default:
                                 // It's a response from an HTML task module

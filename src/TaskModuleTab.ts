@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function(): void {
             url: null,
             card: null,
             fallbackUrl: null,
+            completionBotId: null,
         };
         let deepLink = document.getElementById("dlYouTube") as HTMLAnchorElement;
         deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}`, null, `${appRoot()}/${constants.TaskModuleIds.YouTube}`);
@@ -100,7 +101,7 @@ document.addEventListener("DOMContentLoaded", function(): void {
         for (let btn of taskModuleButtons) {
             btn.addEventListener("click",
                 function (): void {
-                    taskInfo.url = `${appRoot()}/${this.id.toLowerCase()}`;
+                    taskInfo.url = `${appRoot()}/${this.id.toLowerCase()}?theme={theme}`;
                     let submitHandler = (err: string, result: any): void => { console.log(`Err: ${err}; Result:  + ${result}`); };
                     switch (this.id.toLowerCase()) {
                         case constants.TaskModuleIds.YouTube:
@@ -120,8 +121,12 @@ document.addEventListener("DOMContentLoaded", function(): void {
                             taskInfo.height = constants.TaskModuleSizes.customform.height;
                             taskInfo.width = constants.TaskModuleSizes.customform.width;
                             submitHandler = (err: string, result: any): void => {
-                                console.log(`Submit handler - err: ${err}`);
-                                console.log(`Submit handler - result\rName: ${result.name}\rEmail: ${result.email}\rFavorite book: ${result.favoriteBook}`);
+                                if (err) {
+                                    console.log(`Submit handler - err: ${err}`);
+                                }
+                                if (result) {
+                                    console.log(`Submit handler - result\rName: ${result.name}\rEmail: ${result.email}\rFavorite book: ${result.favoriteBook}`);
+                                }
                             };
                             microsoftTeams.tasks.startTask(taskInfo, submitHandler);
                             break;
@@ -131,6 +136,8 @@ document.addEventListener("DOMContentLoaded", function(): void {
                             taskInfo.height = constants.TaskModuleSizes.adaptivecard.height;
                             taskInfo.width = constants.TaskModuleSizes.adaptivecard.width;
                             taskInfo.card = acAttachment(cardTemplates.adaptiveCard);
+                            // Send the Adaptive Card as filled in by the user to the bot in this app
+                            taskInfo.completionBotId = appId;
                             microsoftTeams.tasks.startTask(taskInfo);
                             break;
                         default:

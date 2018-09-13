@@ -1,6 +1,7 @@
 doctype html
 html(lang='en')
   head
+    script(src="https://unpkg.com/@microsoft/teams-js@1.3.4/dist/MicrosoftTeams.min.js" integrity="sha384-3zTjxw3msc6gKx3DseSU0lfRM129YrFjr2xgocfMIN/kBCdzJ88d+FSB1n3scUku" crossorigin="anonymous")
   body
     style.
       body {
@@ -17,6 +18,15 @@ html(lang='en')
         padding-top: 10px;
         padding-bottom: 10px;
         border-style: none;
+      }
+    script.
+      microsoftTeams.initialize();
+
+      // Handle the Esc key
+      document.onkeyup = function(event) {
+        if (event.key === 27) {
+          microsoftTeams.submitTask(null);
+        }
       }
     div(id="embed-container")
       block iframe

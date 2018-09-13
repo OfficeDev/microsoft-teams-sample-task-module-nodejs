@@ -1,9 +1,9 @@
 {
-    "$schema": "https://raw.githubusercontent.com/OfficeDev/microsoft-teams-app-schema/master/MicrosoftTeams.schema.json",
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.3/MicrosoftTeams.schema.json",
     "manifestVersion": "1.3",
     "version": "1.0.0",
-    "id": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
-    "packageName": "com.microsoft.teams.build2018",
+    "id": "f195eed2-4336-4c33-a11b-a417dcaa8680",
+    "packageName": "com.microsoft.teams.taskmoduletester",
     "developer": {
         "name": "Bill Bliss",
         "websiteUrl": "https://www.microsoft.com",
@@ -20,7 +20,7 @@
     },
     "description": {
         "short": "Demo/test app for the Task Module feature",
-        "full": "This app is used to test the task module feature."
+        "full": "This app is used to test the Task Module feature."
     },
     "accentColor": "#020081",
     "configurableTabs": [
@@ -35,7 +35,7 @@
     ],
     "staticTabs": [
         {
-            "entityId": "com.microsoft.teams.build2018.taskmodule",
+            "entityId": "com.microsoft.teams.taskmoduletester",
             "name": "Tasks!",
             "contentUrl": "https://taskmoduletest.azurewebsites.net/taskmodule",
             "websiteUrl": "https://taskmoduletest.azurewebsites.net/taskmodule",
@@ -46,17 +46,59 @@
     ],
     "bots": [
         {
-            "botId": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
+            "botId": "f195eed2-4336-4c33-a11b-a417dcaa8680",
             "scopes": [
                 "team",
                 "personal",
                 "groupchat"
-            ]
+            ],
+            "commandLists": [
+                {
+                    "scopes": [
+                        "personal"
+                    ],
+                    "commands": [
+                        {
+                            "title": "tasks",
+                            "description": "Test the task module with an Adaptive card"
+                        },
+                        {
+                            "title": "bfcard",
+                            "description": "Test task module with a Thumbnail card"
+                        },
+                        {
+                            "title": "actester",
+                            "description": "See what any Adaptive card looks like in Teams"
+                        }
+                    ]
+                },
+                {
+                    "scopes": [
+                        "team"
+                    ],
+                    "commands": [
+                        {
+                            "title": "tasks",
+                            "description": "Test the task module with an Adaptive card"
+                        },
+                        {
+                            "title": "bfcard",
+                            "description": "Test task module with a Thumbnail card"
+                        },
+                        {
+                            "title": "actester",
+                            "description": "See what any Adaptive card looks like in Teams"
+                        }
+                    ]
+                }
+            ],
+            "supportsFiles": false,
+            "isNotificationOnly": false
         }
     ],
     "composeExtensions": [
         {
-            "botId": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
+            "botId": "f195eed2-4336-4c33-a11b-a417dcaa8680",
             "canUpdateConfiguration": false,
             "commands": [
                 {
