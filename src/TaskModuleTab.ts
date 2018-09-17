@@ -80,7 +80,6 @@ document.addEventListener("DOMContentLoaded", function(): void {
     if (taskModuleButtons.length > 0) {
         // Initialize deep links
         let taskInfo = {
-            appId: appId,
             title: null,
             height: null,
             width: null,
@@ -90,18 +89,21 @@ document.addEventListener("DOMContentLoaded", function(): void {
             completionBotId: null,
         };
         let deepLink = document.getElementById("dlYouTube") as HTMLAnchorElement;
-        deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}`, null, `${appRoot()}/${constants.TaskModuleIds.YouTube}`);
+        deepLink.href = taskModuleLink(appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}`, null, `${appRoot()}/${constants.TaskModuleIds.YouTube}`);
         deepLink = document.getElementById("dlPowerApps") as HTMLAnchorElement;
-        deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.PowerAppTitle, constants.TaskModuleSizes.powerapp.height, constants.TaskModuleSizes.powerapp.width, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`, null, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`);
+        deepLink.href = taskModuleLink(appId, constants.TaskModuleStrings.PowerAppTitle, constants.TaskModuleSizes.powerapp.height, constants.TaskModuleSizes.powerapp.width, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`, null, `${appRoot()}/${constants.TaskModuleIds.PowerApp}`);
         deepLink = document.getElementById("dlCustomForm") as HTMLAnchorElement;
-        deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.CustomFormTitle, constants.TaskModuleSizes.customform.height, constants.TaskModuleSizes.customform.width, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`, null, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`);
-        deepLink = document.getElementById("dlAdaptiveCard") as HTMLAnchorElement;
-        deepLink.href = taskModuleLink(taskInfo.appId, constants.TaskModuleStrings.AdaptiveCardTitle, constants.TaskModuleSizes.adaptivecard.height, constants.TaskModuleSizes.adaptivecard.width, null, cardTemplates.adaptiveCard);
+        deepLink.href = taskModuleLink(appId, constants.TaskModuleStrings.CustomFormTitle, constants.TaskModuleSizes.customform.height, constants.TaskModuleSizes.customform.width, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`, null, `${appRoot()}/${constants.TaskModuleIds.CustomForm}`);
+        deepLink = document.getElementById("dlAdaptiveCard1") as HTMLAnchorElement;
+        deepLink.href = taskModuleLink(appId, constants.TaskModuleStrings.AdaptiveCardTitle, constants.TaskModuleSizes.adaptivecard.height, constants.TaskModuleSizes.adaptivecard.width, null, cardTemplates.adaptiveCard);
+        deepLink = document.getElementById("dlAdaptiveCard2") as HTMLAnchorElement;
+        deepLink.href = taskModuleLink(appId, constants.TaskModuleStrings.AdaptiveCardTitle, constants.TaskModuleSizes.adaptivecard.height, constants.TaskModuleSizes.adaptivecard.width, null, cardTemplates.adaptiveCard, null, appId);
 
         for (let btn of taskModuleButtons) {
             btn.addEventListener("click",
                 function (): void {
                     taskInfo.url = `${appRoot()}/${this.id.toLowerCase()}?theme={theme}`;
+                    // Define default submitHandler()
                     let submitHandler = (err: string, result: any): void => { console.log(`Err: ${err}; Result:  + ${result}`); };
                     switch (this.id.toLowerCase()) {
                         case constants.TaskModuleIds.YouTube:
@@ -131,6 +133,25 @@ document.addEventListener("DOMContentLoaded", function(): void {
                             microsoftTeams.tasks.startTask(taskInfo, submitHandler);
                             break;
                         case constants.TaskModuleIds.AdaptiveCard1:
+                            taskInfo.title = constants.TaskModuleStrings.AdaptiveCardTitle;
+                            taskInfo.url = null;
+                            taskInfo.height = constants.TaskModuleSizes.adaptivecard.height;
+                            taskInfo.width = constants.TaskModuleSizes.adaptivecard.width;
+                            taskInfo.card = acAttachment(cardTemplates.adaptiveCard);
+                            submitHandler = (err: string, result: any): void => {
+                                // Unhide and populate adaptiveResults
+                                let resultsElement = document.getElementById("adaptiveResults");
+                                resultsElement.style.display = "block";
+                                if (err) {
+                                    resultsElement.innerHTML = "User cancelled the Adaptive card.";
+                                }
+                                if (result) {
+                                    resultsElement.innerHTML = `Result: ${JSON.stringify(result)}`;
+                                }
+                            };
+                            microsoftTeams.tasks.startTask(taskInfo, submitHandler);
+                            break;
+                        case constants.TaskModuleIds.AdaptiveCard2:
                             taskInfo.title = constants.TaskModuleStrings.AdaptiveCardTitle;
                             taskInfo.url = null;
                             taskInfo.height = constants.TaskModuleSizes.adaptivecard.height;
