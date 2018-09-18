@@ -47,7 +47,7 @@ export const UrlPlaceholders = "loginHint={loginHint}&upn={userPrincipalName}&aa
 // Task Module Strings
 // tslint:disable-next-line:variable-name
 export const TaskModuleStrings = {
-    YouTubeTitle: "Satya Nadella's Build 2018 Keynote",
+    YouTubeTitle: "Microsoft Ignite 2017 Recap",
     PowerAppTitle: "PowerApp: Asset Checkout",
     CustomFormTitle: "Custom Form",
     AdaptiveCardTitle: "Adaptive Card: Inputs",
