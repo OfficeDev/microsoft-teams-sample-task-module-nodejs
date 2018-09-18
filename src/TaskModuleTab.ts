@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function(): void {
                                 let resultsElement = document.getElementById("adaptiveResults");
                                 resultsElement.style.display = "block";
                                 if (err) {
-                                    resultsElement.innerHTML = "User cancelled the Adaptive card.";
+                                    resultsElement.innerHTML = err;
                                 }
                                 if (result) {
                                     resultsElement.innerHTML = `Result: ${JSON.stringify(result)}`;
