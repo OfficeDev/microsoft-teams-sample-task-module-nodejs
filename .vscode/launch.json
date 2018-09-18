@@ -21,9 +21,9 @@
             "sourceMaps": true,
             "outFiles": [ "${workspaceRoot}/build/**/*.js" ],
             "env": {
-                "BASE_URI": "https://build2018.ngrok.io",
-                "MICROSOFT_APP_ID": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
-                "MICROSOFT_APP_PASSWORD": "tsbapsTSDM227}qOYF44#;%",
+                "BASE_URI": "https://BASE_URI",
+                "MICROSOFT_APP_ID": "00000000-0000-0000-0000-000000000000",
+                "MICROSOFT_APP_PASSWORD": "",
                 "NODE_DEBUG": "botbuilder"
             }
         },
@@ -36,9 +36,9 @@
             "cwd": "{workspaceRoot}/build/src",
             "webRoot": "${workspaceFolder}",
             "env": {
-                "BASE_URI": "https://build2018.ngrok.io",
-                "MICROSOFT_APP_ID": "bdc707d5-48e0-48f8-bbe7-6131e0565a4c",
-                "MICROSOFT_APP_PASSWORD": "tsbapsTSDM227}qOYF44#;%",
+                "BASE_URI": "https://BASE_URI",
+                "MICROSOFT_APP_ID": "00000000-0000-0000-0000-000000000000",
+                "MICROSOFT_APP_PASSWORD": "",
                 "NODE_DEBUG": "botbuilder"
             }
         },
