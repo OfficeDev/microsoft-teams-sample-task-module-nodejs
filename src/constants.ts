@@ -50,7 +50,8 @@ export const TaskModuleStrings = {
     YouTubeTitle: "Microsoft Ignite 2017 Recap",
     PowerAppTitle: "PowerApp: Asset Checkout",
     CustomFormTitle: "Custom Form",
-    AdaptiveCardTitle: "Adaptive Card: Inputs",
+    AdaptiveCardTitle: "Create a new job posting",
+    AdaptiveCardKitchenSinkTitle: "Adaptive Card: Inputs",
     ActionSubmitResponseTitle: "Action.Submit Response",
     YouTubeName: "YouTube",
     PowerAppName: "PowerApp",
@@ -85,7 +86,7 @@ export const TaskModuleSizes = {
         height: 430,
     },
     adaptivecard: {
-        width: "medium",
-        height: "large",
+        width: 700,
+        height: 255,
     },
 };

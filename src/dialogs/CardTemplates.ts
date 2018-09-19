@@ -300,6 +300,109 @@ export const cardTemplates: any = {
         "version": "1.0"
     },
     adaptiveCard: {
+        "type": "AdaptiveCard",
+        "body": [
+            {
+                "type": "TextBlock",
+                "separator": true,
+                "size": "Large",
+                "weight": "Bolder",
+                "text": "Enter basic information for this position:",
+                "isSubtle": true,
+                "wrap": true
+            },
+            {
+                "type": "TextBlock",
+                "separator": true,
+                "text": "Title",
+                "wrap": true
+            },
+            {
+                "type": "Input.Text",
+                "id": "jobTitle",
+                "placeholder": "E.g. Senior PM"
+            },
+            {
+                "type": "ColumnSet",
+                "columns": [
+                    {
+                        "type": "Column",
+                        "items": [
+                            {
+                                "type": "TextBlock",
+                                "text": "Level",
+                                "wrap": true
+                            },
+                            {
+                                "type": "Input.Number",
+                                "id": "jobLevel",
+                                "value": "7",
+                                "placeholder": "Level",
+                                "min": 7,
+                                "max": 10
+                            }
+                        ],
+                        "width": 2
+                    },
+                    {
+                        "type": "Column",
+                        "items": [
+                            {
+                                "type": "TextBlock",
+                                "text": "Location"
+                            },
+                            {
+                                "type": "Input.ChoiceSet",
+                                "id": "jobLocation",
+                                "value": "1",
+                                "choices": [
+                                    {
+                                        "title": "San Francisco",
+                                        "value": "1"
+                                    },
+                                    {
+                                        "title": "London",
+                                        "value": "2"
+                                    },
+                                    {
+                                        "title": "Singapore",
+                                        "value": "3"
+                                    },
+                                    {
+                                        "title": "Dubai",
+                                        "value": "3"
+                                    },
+                                    {
+                                        "title": "Frankfurt",
+                                        "value": "3"
+                                    }
+                                ],
+                                "isCompact": true
+                            }
+                        ],
+                        "width": 2
+                    }
+                ]
+            }
+        ],
+        "actions": [
+            {
+                "type": "Action.Submit",
+                "id": "createPosting",
+                "title": "Create posting",
+                "data": {
+                    "command": "createPosting"
+                }
+            },
+            {
+                "type": "Action.Submit",
+                "id": "cancel",
+                "title": "Cancel"
+            }
+        ],
+        "version": "1.0"
+    },
+    adaptiveCardKitchenSink: {
         "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
         "type": "AdaptiveCard",
         "version": "1.0",
