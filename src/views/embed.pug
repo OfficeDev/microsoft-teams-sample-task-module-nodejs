@@ -47,11 +47,11 @@ html(lang='en')
     script.
       microsoftTeams.initialize();
 
-      // Handle the Esc key
+      //- Handle the Esc key
       document.onkeyup = function(event) {
-        if (event.key === 27) {
-          microsoftTeams.submitTask(null);
+        if ((event.key === 27) || (event.key === "Escape")) {
+          microsoftTeams.tasks.submitTask(null); //- this will return an err object to the completionHandler() 
         }
-      }
+      }      
     div(id="embed-container")
       block iframe

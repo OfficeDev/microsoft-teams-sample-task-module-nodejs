@@ -152,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function(): void {
                                     console.log(`Submit handler - err: ${err}`);
                                 }
                                 if (result) {
-                                    console.log(`Submit handler - result\rName: ${result.name}\rEmail: ${result.email}\rFavorite book: ${result.favoriteBook}`);
+                                    console.log(`Submit handler - result: Name: ${result.name}; Email: ${result.email}; Favorite book: ${result.favoriteBook}`);
                                 }
                             };
                             microsoftTeams.tasks.startTask(taskInfo, submitHandler);
