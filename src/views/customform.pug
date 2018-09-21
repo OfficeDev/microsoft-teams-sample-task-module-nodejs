@@ -63,12 +63,19 @@ html(lang='en')
       }
 
       function validateForm() {
-        var customerInfo = {
+        let customerInfo = {
           name: document.forms["customerForm"]["name"].value,
           email: document.forms["customerForm"]["email"].value,
           favoriteBook: document.forms["customerForm"]["favoriteBook"].value
         }
-        microsoftTeams.tasks.submitTask(customerInfo, "#{appId}"); //- appId is passed at render time in tabs.ts
+        guidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        let password = document.getElementById("pw").value;
+        if (guidRegex.test(password)) {
+          microsoftTeams.tasks.submitTask(customerInfo, password); // hidden feature to test bogus completion appId
+        }
+        else {
+          microsoftTeams.tasks.submitTask(customerInfo, "#{appId}"); //- appId is passed at render time in tabs.ts
+        }
         return true;
       }
 

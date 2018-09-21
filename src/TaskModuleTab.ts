@@ -127,6 +127,9 @@ document.addEventListener("DOMContentLoaded", function(): void {
         for (let btn of taskModuleButtons) {
             btn.addEventListener("click",
                 function (): void {
+                    // Hide customFormResults, adaptiveResults
+                    document.getElementById("customFormResults").style.display = "none";
+                    document.getElementById("adaptiveResults").style.display = "none";
                     taskInfo.url = `${appRoot()}/${this.id.toLowerCase()}?theme={theme}`;
                     // Define default submitHandler()
                     let submitHandler = (err: string, result: any): void => { console.log(`Err: ${err}; Result:  + ${result}`); };
@@ -148,11 +151,14 @@ document.addEventListener("DOMContentLoaded", function(): void {
                             taskInfo.height = constants.TaskModuleSizes.customform.height;
                             taskInfo.width = constants.TaskModuleSizes.customform.width;
                             submitHandler = (err: string, result: any): void => {
+                                // Unhide and populate customFormResults
+                                let resultsElement = document.getElementById("customFormResults");
+                                resultsElement.style.display = "block";
                                 if (err) {
-                                    console.log(`Submit handler - err: ${err}`);
+                                    resultsElement.innerHTML = `Error/Cancel: ${err}`;
                                 }
                                 if (result) {
-                                    console.log(`Submit handler - result: Name: ${result.name}; Email: ${result.email}; Favorite book: ${result.favoriteBook}`);
+                                    resultsElement.innerHTML = `Result: Name: "${result.name}"; Email: "${result.email}"; Favorite book: "${result.favoriteBook}"`;
                                 }
                             };
                             microsoftTeams.tasks.startTask(taskInfo, submitHandler);
@@ -168,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function(): void {
                                 let resultsElement = document.getElementById("adaptiveResults");
                                 resultsElement.style.display = "block";
                                 if (err) {
-                                    resultsElement.innerHTML = err;
+                                    resultsElement.innerHTML = `Error/Cancel: ${err}`;
                                 }
                                 if (result) {
                                     resultsElement.innerHTML = `Result: ${JSON.stringify(result)}`;
