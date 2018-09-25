@@ -27,7 +27,7 @@ import * as constants from "../constants";
 import * as utils from "../utils";
 import { cardTemplates, fetchTemplates, appRoot } from "./CardTemplates";
 import { taskModuleLink } from "../utils/DeepLinks";
-import { renderBFAttachment } from "../utils/CardUtils";
+import { renderCard } from "../utils/CardUtils";
 
 // Dialog for the Adaptive Card tester
 export class BotFrameworkCard extends builder.IntentDialog
@@ -95,10 +95,10 @@ export class BotFrameworkCard extends builder.IntentDialog
         if (text === constants.DialogId.BFCard) {
             // The user has typed "bfcard" - send two cards, one illustrating deep link buttons, and one with task/fetch
             session.send(new builder.Message(session).addAttachment(
-                renderBFAttachment(cardTemplates.bfThumbnailDeepLink, cardData),
+                renderCard(cardTemplates.bfThumbnailDeepLink, cardData),
             ));
             session.send(new builder.Message(session).addAttachment(
-                renderBFAttachment(cardTemplates.bfThumbnailTaskFetch, cardData),
+                renderCard(cardTemplates.bfThumbnailTaskFetch, cardData),
             ));
         }
         session.endDialog();

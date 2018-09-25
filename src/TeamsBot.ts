@@ -28,7 +28,7 @@ import * as logger from "winston";
 
 import { RootDialog } from "./dialogs/RootDialog";
 import { fetchTemplates, cardTemplates } from "./dialogs/CardTemplates";
-import { renderACAttachment, renderAdaptiveCard } from "./utils";
+import { renderACAttachment } from "./utils";
 
 export class TeamsBot extends builder.UniversalBot {
 

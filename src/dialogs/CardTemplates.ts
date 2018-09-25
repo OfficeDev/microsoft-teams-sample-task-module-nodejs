@@ -391,7 +391,8 @@ export const cardTemplates: any = {
                 "id": "createPosting",
                 "title": "Create posting",
                 "data": {
-                    "command": "createPosting"
+                    "command": "createPosting",
+                    "taskResponse": "{{responseType}}",
                 }
             },
             {
@@ -732,6 +733,21 @@ export const cardTemplates: any = {
           ],
         }
     },
+    ninjaCatAdaptiveCard: {
+        "type": "AdaptiveCard",
+        "body": [
+            {
+                "type": "TextBlock",
+                "text": "Here is a ninja cat:"
+            },
+            {
+                "type": "Image",
+                "url": "http://adaptivecards.io/content/cats/1.png",
+                "size": "Medium"
+            }
+        ],
+        "version": "1.0"
+    },
 };
 
 export const fetchTemplates: any = {
@@ -793,6 +809,18 @@ export const fetchTemplates: any = {
                 "fallbackUrl": null,
                 // Below wraps it as a builder.Attachment
                 "card": renderACAttachment(cardTemplates.adaptiveCard, { responseType: "continue" }),
+            },
+        },
+    },
+    ninjaCat: {
+        "task": {
+            "type": "continue",
+            "value": {
+                "title": "Ninja Cat",
+                "height": "small",
+                "width": "small",
+                "fallbackUrl": null,
+                "card": renderACAttachment(cardTemplates.ninjaCatAdaptiveCard, {responseType: "continue"}),
             },
         },
     },
