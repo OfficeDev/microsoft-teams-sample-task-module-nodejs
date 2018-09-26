@@ -21,7 +21,7 @@ The tab shows how to invoke the task module using the Teams SDK. Source code for
 The following task modules are supported:
 
 * YouTube, which is comprised of a [generic template for embedded `<iframe>` experiences](src/views/embed.pug) (also used for the PowerApp task module below) plus a [four-line stub containing the YouTube embed URL](src/views/youtube.pug)
-* [PowerApp](src/views/powerapp.pug) &mdash; unfortunately it doesn't work out of the box; click the button or see the [source code](src/views/powerapp.pug) for details on how you can use it yourself
+* [PowerApp](src/views/powerapp.pug) &mdash; unfortunately it doesn't work out of the box; click the button or see the [source code](src/views/powerapp.pug) for details on how you can customize it for your tenant
 * [A simple HTML form](src/views/customform.pug)
 * There are two Adaptive card examples:
   * Showing the results of an `Action.Submit` button returned to the tab
