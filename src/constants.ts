@@ -56,8 +56,8 @@ export const TaskModuleStrings = {
     YouTubeName: "YouTube",
     PowerAppName: "PowerApp",
     CustomFormName: "Custom Form",
-    AdaptiveCardInlineName: "Adaptive Card - Inline",
-    AdaptiveCardFlowName: "Adaptive Card - Flow",
+    AdaptiveCardSingleName: "Adaptive Card - Single",
+    AdaptiveCardSequenceName: "Adaptive Card - Sequence",
 };
 
 // Task Module Ids

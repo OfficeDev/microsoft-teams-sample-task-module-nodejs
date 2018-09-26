@@ -96,7 +96,7 @@ export class TeamsBot extends builder.UniversalBot {
                             default:
                                 // It's a response from an HTML task module
                                 cb(null, fetchTemplates.submitMessageResponse, 200);
-                                session.send("**task/submit results from HTML:**\n\n```" + JSON.stringify(invokeValue.data) + "```");
+                                session.send("**task/submit results from HTML or deep link:**\n\n```" + JSON.stringify(invokeValue.data) + "```");
                         }
                     }
                     break;

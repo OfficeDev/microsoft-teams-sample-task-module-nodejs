@@ -76,9 +76,9 @@ export class BotFrameworkCard extends builder.IntentDialog
             url2: taskModuleUrls.url2,
             linkbutton3: constants.TaskModuleStrings.CustomFormName,
             url3: taskModuleUrls.url3,
-            linkbutton4: constants.TaskModuleStrings.AdaptiveCardInlineName,
+            linkbutton4: constants.TaskModuleStrings.AdaptiveCardSingleName,
             url4: taskModuleUrls.url4,
-            linkbutton5: constants.TaskModuleStrings.AdaptiveCardFlowName,
+            linkbutton5: constants.TaskModuleStrings.AdaptiveCardSequenceName,
             url5: taskModuleUrls.url5,
             fetchButtonId1: `${constants.TaskModuleIds.YouTube}`,
             fetchButtonId2: `${constants.TaskModuleIds.PowerApp}`,
@@ -88,8 +88,8 @@ export class BotFrameworkCard extends builder.IntentDialog
             fetchButtonTitle1: `${constants.TaskModuleStrings.YouTubeName}`,
             fetchButtonTitle2: `${constants.TaskModuleStrings.PowerAppName}`,
             fetchButtonTitle3: `${constants.TaskModuleStrings.CustomFormName}`,
-            fetchButtonTitle4: `${constants.TaskModuleStrings.AdaptiveCardInlineName}`,
-            fetchButtonTitle5: `${constants.TaskModuleStrings.AdaptiveCardFlowName}`,
+            fetchButtonTitle4: `${constants.TaskModuleStrings.AdaptiveCardSingleName}`,
+            fetchButtonTitle5: `${constants.TaskModuleStrings.AdaptiveCardSequenceName}`,
         };
 
         if (text === constants.DialogId.BFCard) {

@@ -104,6 +104,10 @@ export const cardTemplates: any = {
                                 {
                                     "title": "Button 4 URL",
                                     "value": "{{markdown4}}"
+                                },
+                                {
+                                    "title": "Button 5 URL",
+                                    "value": "{{markdown5}}"
                                 }
                             ]
                         },
