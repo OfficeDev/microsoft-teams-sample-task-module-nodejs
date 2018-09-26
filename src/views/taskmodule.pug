@@ -31,27 +31,27 @@ block content
   p Let's try it out!
     div(id="buttons" style="text-align: center; margin-left: auto; margin-right: auto")
       button(class="taskModuleButton button-primary" id="YouTube") YouTube
-      div <a id="dlYouTube" class="deepLink")>Deep Link</a>
+      div <a id="dlYouTube" target="_blank")>Deep Link</a>
       p
       button(class="taskModuleButton button-primary" id="PowerApp") PowerApp
-      div <a id="dlPowerApps" class="deepLink")>Deep Link</a>
+      div <a id="dlPowerApps" target="_blank")>Deep Link</a>
       p
       button(class="taskModuleButton button-primary" id="customform") Custom Form
       div
-        <a id="dlCustomForm" class="deepLink")>Deep Link</a>
+        <a id="dlCustomForm" target="_blank")>Deep Link</a>
         pre(id="customFormResults" style="white-space: pre-wrap; display: none")
       p
       button(class="taskModuleButton button-primary" id="adaptivecard1") Adaptive Card (results &rarr; tab)
       div
-        <a id="dlAdaptiveCard1" class="deepLink")>Deep Link</a>
+        <a id="dlAdaptiveCard1" class="deepLinkWarning" target="_blank")>Deep Link</a>
         pre(id="adaptiveResults" style="white-space: pre-wrap; display: none")
       p
       button(class="taskModuleButton button-primary" id="adaptivecard2") Adaptive Card (results &rarr; bot)
       div
-        <a id="dlAdaptiveCard2" class="deepLink")>Deep Link</a>
+        <a id="dlAdaptiveCard2" class="deepLinkWarning" target="_blank")>Deep Link</a>
   script.
     // Wire up event handler for the click event
-    var deepLinks = document.getElementsByClassName("deepLink");
+    var deepLinks = document.getElementsByClassName("deepLinkWarning");
     for (var i = 0; i < deepLinks.length; i++) {
       deepLinks[i].onmousedown = deepLinkAlert;
     };
@@ -60,6 +60,6 @@ block content
       if (event.which === 1) {
         event.stopPropagation();
         // event.preventDefault();
-        alert("Task module links can't be used from within a tab, but if you are running Teams in the browser, you can right-click and copy the link to the clipboard and use it from outside Teams.");
+        alert("The deep link URL is too long to be used from the browser address bar, but on most browsers, it will work from within an anchor tag (<a>) or a button.");
       }
     }
