@@ -43,6 +43,21 @@ export function renderACAttachment(template: any, data: any): builder.Attachment
     };
 }
 
+export function renderO365ConnectorAttachment(template: any, data: any): builder.AttachmentType {
+    // Pre-process the template so that template placeholders don't show up for null data values
+    // Regex: Find everything between {{}} and prepend "#? " to it
+    template = JSON.parse(JSON.stringify(template).replace(/{{(.+?)}}/g, "{{#? $1}}"));
+
+    // No error handling in the call to stjs functions - what you pass in may be garbage, but it always returns a value
+    let card = stjs.select(data)
+        .transformWith(template)
+        .root();
+    return {
+            contentType: "application/vnd.microsoft.teams.card.o365connector",
+            content: card,
+    };
+}
+
 export function renderCard(template: any, data: any): any {
     // Pre-process the template so that template placeholders don't show up for null data values
     // Regex: Find everything between {{}} and prepend "#? " to it

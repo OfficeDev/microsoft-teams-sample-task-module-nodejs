@@ -279,7 +279,7 @@ export const cardTemplates: any = {
                 "items": [
                     {
                         "type": "TextBlock",
-                        "text": "Copy/paste Adaptive Card JSON from [Adaptive Cards Designer](http://acdesignerbeta.azurewebsites.net/) or [Adaptive Cards Samples](http://adaptivecards.io/samples/) into the text box below and press Submit.",
+                        "text": "Copy/paste Adaptive Card JSON from [Adaptive Cards Designer](http://acdesignerbeta.azurewebsites.net/) or [Adaptive Cards Samples](http://adaptivecards.io/samples/) into the text box below and press Submit. You can also copy/paste O365Connector/MessageCard JSON from [Message Card Playground](https://messagecardplayground.azurewebsites.net/) or Bot Framework card JSON.",
                         "wrap": true
                     }
                 ]

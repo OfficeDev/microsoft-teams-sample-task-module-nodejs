@@ -25,7 +25,7 @@ import * as builder from "botbuilder";
 import * as constants from "../constants";
 import * as utils from "../utils";
 import { cardTemplates } from "./CardTemplates";
-import { renderACAttachment } from "../utils/CardUtils";
+import { renderACAttachment, renderO365ConnectorAttachment } from "../utils/CardUtils";
 
 // Dialog for the Adaptive Card tester
 export class ACGeneratorDialog extends builder.IntentDialog
@@ -51,10 +51,23 @@ export class ACGeneratorDialog extends builder.IntentDialog
         if (session.message.text === "") {
             if ((session.message.value !== undefined) && (session.message.value.acBody !== undefined)) {
                 try {
-                    let ac = JSON.parse(session.message.value.acBody);
-                    session.endDialog(new builder.Message(session).addAttachment(
-                        renderACAttachment(ac, null),
-                    ));
+                    let card = JSON.parse(session.message.value.acBody);
+                    // Check to see if the body is an Adaptive Card
+                    if ((card.type !== undefined) && (card.type.toLowerCase() === "adaptivecard")) {
+                        session.endDialog(new builder.Message(session).addAttachment(
+                            renderACAttachment(card, null),
+                        ));
+                    }
+                    // Check to see if it's an Office 365 Connector Card
+                    if ((card["@type"] !== undefined) && (card["@type"].toLowerCase() === "messagecard")) {
+                        session.endDialog(new builder.Message(session).addAttachment(
+                            renderO365ConnectorAttachment(card, null),
+                        ));
+                    }
+                    // Check to see if it's a Bot Framework card
+                    if (card.contentType !== undefined) {
+                        session.endDialog(new builder.Message(session).addAttachment(card));
+                    }
                 }
                 catch {
                     session.send("Error parsing Adaptive Card JSON.");
