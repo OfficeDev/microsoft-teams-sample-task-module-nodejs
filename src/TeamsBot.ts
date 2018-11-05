@@ -67,16 +67,7 @@ export class TeamsBot extends builder.UniversalBot {
             }
             switch (invokeType) {
                 case "task/fetch": {
-                    let taskModule = "";
-                    // Simplify this code once the data structure change (bug 387458) makes it to R3.6
-                    if (invokeValue.data === undefined) {
-                        // Bug fix 387458 has not been fixed
-                        taskModule = invokeValue.taskModule.toLowerCase();
-                    }
-                    else {
-                        // Bug fix 387458 was fixed
-                        taskModule = invokeValue.data.taskModule.toLowerCase();
-                    }
+                    let taskModule = invokeValue.data.taskModule.toLowerCase();
                     if (fetchTemplates[taskModule] !== undefined) {
                         // Return the specified task module response to the bot
                         cb(null, fetchTemplates[taskModule], 200);
