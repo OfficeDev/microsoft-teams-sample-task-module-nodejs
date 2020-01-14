@@ -25,13 +25,11 @@ import * as builder from "botbuilder";
 import * as constants from "../constants";
 import * as utils from "../utils";
 import * as logger from "winston";
-import * as config from "config";
 import { ACGeneratorDialog } from "./ACGenerator";
 import { renderACAttachment } from "../utils/CardUtils";
 import { cardTemplates, fetchTemplates, appRoot } from "./CardTemplates";
 import { taskModuleLink } from "../utils/DeepLinks";
 import { BotFrameworkCard } from "./BotFrameworkCard";
-
 // The Adaptive Card version is shown by default, which is why this lives in RootDialog
 export class RootDialog extends builder.IntentDialog
 {
@@ -72,7 +70,7 @@ export class RootDialog extends builder.IntentDialog
             let text = utils.getTextWithoutMentions(session.message);
 
             let appInfo = {
-                appId: config.get("bot.appId") as string,
+                appId: process.env.MICROSOFT_APP_ID as string,
             };
             let taskModuleUrls = {
                 url1: taskModuleLink(appInfo.appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}`, null, `${appRoot()}/${constants.TaskModuleIds.YouTube}`),

@@ -21,6 +21,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import * as dotenv from "dotenv";
+dotenv.config({ path: `${process.cwd().replace(/\\/g, "/")}/../../.env` }); // Init environment variables
+
 import * as express from "express";
 import * as favicon from "serve-favicon";
 import * as bodyParser from "body-parser";
@@ -29,7 +32,6 @@ import * as logger from "winston";
 import * as winston from "winston";
 import * as builder from "botbuilder";
 import * as msteams from "botbuilder-teams";
-import * as config from "config";
 import * as storage from "./storage";
 import { TeamsBot } from "./TeamsBot";
 import { MessagingExtension } from "./MessagingExtension";
@@ -47,11 +49,11 @@ app.use(favicon(path.join(__dirname, "../../public/images", "favicon.ico")));
 app.use(bodyParser.json());
 
 // Configure bot storage
-let botStorageProvider = config.get("storage");
+let botStorageProvider = process.env.BOT_STORAGE;
 let botStorage = null;
 switch (botStorageProvider) {
     case "mongoDb":
-        botStorage = new storage.MongoDbBotStorage(config.get("mongoDb.botStateCollection"), config.get("mongoDb.connectionString"));
+        botStorage = new storage.MongoDbBotStorage(process.env.MONGODB_BOT_STATE_COLLECTION, process.env.MONGODB_CONNECTION_STRING);
         break;
     case "memory":
         botStorage = new builder.MemoryBotStorage();
@@ -63,8 +65,8 @@ switch (botStorageProvider) {
 
 // Create bot
 let connector = new msteams.TeamsChatConnector({
-    appId: config.get("bot.appId"),
-    appPassword: config.get("bot.appPassword"),
+    appId: process.env.MICROSOFT_APP_ID,
+    appPassword: process.env.MICROSOFT_APP_PASSWORD,
 });
 let botSettings = {
     storage: botStorage,
@@ -95,10 +97,10 @@ app.get("/ping", (req, res) => {
 // Start our nodejs app
 app.listen(app.get("port"), function(): void {
     console.log("Express server listening on port " + app.get("port"));
-    console.log("Bot messaging endpoint: " + config.get("app.baseUri") + "/api/messages");
+    console.log("Bot messaging endpoint: " + process.env.BASE_URI + "/api/messages");
 
     logger.verbose("Express server listening on port " + app.get("port"));
-    logger.verbose("Bot messaging endpoint: " + config.get("app.baseUri") + "/api/messages");
+    logger.verbose("Bot messaging endpoint: " + process.env.BASE_URI + "/api/messages");
 });
 
 function initLogger(): void {
