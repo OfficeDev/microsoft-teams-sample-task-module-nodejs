@@ -23,7 +23,6 @@
 
 import { Request, Response } from "express";
 import * as bodyParser from "body-parser";
-import * as config from "config";
 
 module.exports.setup = function(app: any): void {
     let path = require("path");
@@ -63,7 +62,7 @@ module.exports.setup = function(app: any): void {
 
     app.get("/taskmodule", function(req: Request, res: Response): void {
         // Render the template, passing the appId so it's included in the rendered HTML
-        res.render("taskmodule", { appId: config.get("app.appId") });
+        res.render("taskmodule", { appId: process.env.MICROSOFT_APP_ID });
     });
 
     app.get("/youtube", function(req: Request, res: Response): void {
@@ -76,7 +75,7 @@ module.exports.setup = function(app: any): void {
 
     app.get("/customform", function(req: Request, res: Response): void {
         // Render the template, passing the appId so it's included in the rendered HTML
-        res.render("customform", { appId: config.get("app.appId") });
+        res.render("customform", { appId: process.env.MICROSOFT_APP_ID });
     });
 
     app.post("/register", function(req: Request, res: Response): void {

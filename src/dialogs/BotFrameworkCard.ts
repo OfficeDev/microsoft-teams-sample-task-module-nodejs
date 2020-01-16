@@ -22,7 +22,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import * as builder from "botbuilder";
-import * as config from "config";
 import * as constants from "../constants";
 import * as utils from "../utils";
 import { cardTemplates, fetchTemplates, appRoot } from "./CardTemplates";
@@ -54,7 +53,7 @@ export class BotFrameworkCard extends builder.IntentDialog
         let text = utils.getTextWithoutMentions(session.message);
 
         let appInfo = {
-            appId: config.get("bot.appId") as string,
+            appId: process.env.MICROSOFT_APP_ID,
         };
         let taskModuleUrls = {
             url1: taskModuleLink(appInfo.appId, constants.TaskModuleStrings.YouTubeTitle, constants.TaskModuleSizes.youtube.height, constants.TaskModuleSizes.youtube.width, `${appRoot()}/${constants.TaskModuleIds.YouTube}`),

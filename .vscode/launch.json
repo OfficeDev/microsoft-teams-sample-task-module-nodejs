@@ -19,13 +19,7 @@
             "cwd": "${workspaceRoot}/build/src",
             "preLaunchTask": "build",
             "sourceMaps": true,
-            "outFiles": [ "${workspaceRoot}/build/**/*.js" ],
-            "env": {
-                "BASE_URI": "https://BASE_URI",
-                "MICROSOFT_APP_ID": "00000000-0000-0000-0000-000000000000",
-                "MICROSOFT_APP_PASSWORD": "",
-                "NODE_DEBUG": "botbuilder"
-            }
+            "outFiles": [ "${workspaceRoot}/build/**/*.js" ]
         },
         {
             "name": "Attach to Teams",
@@ -34,13 +28,7 @@
             "port": 9222,
             "runtimeExecutable": "C:/Users/billb/AppData/Local/Microsoft/Teams/Update.exe --processStart 'Teams.exe'",
             "cwd": "{workspaceRoot}/build/src",
-            "webRoot": "${workspaceFolder}",
-            "env": {
-                "BASE_URI": "https://BASE_URI",
-                "MICROSOFT_APP_ID": "00000000-0000-0000-0000-000000000000",
-                "MICROSOFT_APP_PASSWORD": "",
-                "NODE_DEBUG": "botbuilder"
-            }
+            "webRoot": "${workspaceFolder}"
         },
         {
             "type": "node",
@@ -50,13 +38,7 @@
             "cwd": "${workspaceRoot}/build/src",
             "preLaunchTask": "build",
             "sourceMaps": true,
-            "outFiles": [ "${workspaceRoot}/build/**/*.js" ],
-            "env": {
-                "BASE_URI": "https://BASE_URI",
-                "MICROSOFT_APP_ID": "MICROSOFT_APP_ID",
-                "MICROSOFT_APP_PASSWORD": "MICROSOFT_APP_PASSWORD",
-                "NODE_TLS_REJECT_UNAUTHORIZED": "0"
-            }
+            "outFiles": [ "${workspaceRoot}/build/**/*.js" ]
         },
         {
             "type": "node",
@@ -65,13 +47,7 @@
             "program": "${workspaceRoot}/build/src/app.js",
             "cwd": "${workspaceRoot}/build/src",
             "sourceMaps": true,
-            "outFiles": [ "${workspaceRoot}/build/src/**/*.js" ],
-            "env": {
-                "BASE_URI": "https://BASE_URI",
-                "MICROSOFT_APP_ID": "MICROSOFT_APP_ID",
-                "MICROSOFT_APP_PASSWORD": "MICROSOFT_APP_PASSWORD",
-                "NODE_DEBUG": "botbuilder",
-            }
+            "outFiles": [ "${workspaceRoot}/build/src/**/*.js" ]
         }
     ]
 }

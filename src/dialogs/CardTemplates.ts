@@ -21,14 +21,13 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import * as config from "config";
 import * as constants from "../constants";
 import { renderACAttachment } from "../utils";
 
 // Function that works both in Node (where window === undefined) or the browser
 export function appRoot(): string {
     if (typeof window === "undefined") {
-        return config.get("app.baseUri");
+        return process.env.BASE_URI;
     } else {
         return window.location.protocol + "//" + window.location.host;
     }

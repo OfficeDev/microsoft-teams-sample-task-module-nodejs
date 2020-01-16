@@ -46,11 +46,6 @@ var knownOptions = {
 };
 var options = minimist(process.argv.slice(2), knownOptions);
 
-var tsProject = ts.createProject('./tsconfig.json', {
-    // Point to the specific typescript package we pull in, not a machine-installed one
-    typescript: require('typescript'),
-});
-
 var filesToWatch = ['**/*.ts', '!node_modules/**'];
 var filesToLint = ['**/*.ts', '!src/typings/**', '!node_modules/**'];
 var staticFiles = ['src/**/*.json', 'src/**/*.pug', '!src/manifest.json'];
@@ -61,55 +56,65 @@ var msTeamsLib = './node_modules/@microsoft/teams-js/dist/MicrosoftTeams.min.js'
 /**
  * Clean build output.
  */
-gulp.task('clean', function() {
-    return del([
+gulp.task('clean', (done) => {
+    del([
         'build/**/*',
         // Azure doesn't like it when we delete build/src
         '!build/src'
         // 'manifest/**/*'
-    ])
+    ]);
+    done();
 });
 
 /**
  * Lint all TypeScript files.
  */
-gulp.task('ts:lint', [], function () {
+gulp.task('ts:lint', (done) => {
     if (!process.env.GLITCH_NO_LINT) {
-        return gulp
-            .src(filesToLint)
+        gulp.src(filesToLint)
             .pipe(tslint({
                 formatter: 'verbose'
             }))
             .pipe(tslint.report({
                 summarizeFailureOutput: true
             }));
-      }
+        done();
+    } else {
+        done();
+    }
 });
 
 /**
  * Compile TypeScript and include references to library.
  */
-gulp.task('ts', ['clean'], function() {
-    return tsProject
+gulp.task('ts', gulp.series("clean", (done) => {
+    var tsProject = ts.createProject('./tsconfig.json', {
+        // Point to the specific typescript package we pull in, not a machine-installed one
+        typescript: require('typescript'),
+    });
+    
+    tsProject
         .src()
         .pipe(sourcemaps.init())
         .pipe(tsProject())
         .pipe(sourcemaps.write('.', { sourceRoot: function(file) { return file.cwd + '/build'; }}))
         .pipe(gulp.dest('build/src'));
-});
+    done();
+}));
 
 /**
  * Copy statics to build directory.
  */
-gulp.task('statics:copy', ['clean'], function () {
-    return gulp.src(staticFiles, { base: '.' })
+gulp.task('statics:copy', gulp.series("clean", (done) => {
+    gulp.src(staticFiles, { base: '.' })
         .pipe(gulp.dest('./build'));
-});
+    done();
+}));
 
 /**
  * Copy (generated) client TypeScript files to the /scripts directory
  */
-gulp.task('client-js', ['ts'], function() {
+gulp.task('client-js', gulp.series("ts", (done) => {
     var bundler = browserify({
         entries: clientJS,
         ignoreMissing: true,
@@ -129,37 +134,40 @@ gulp.task('client-js', ['ts'], function() {
         bundler.on('update', bundle)
     }
 
-    return bundle();
-});
+    bundle();
+    done();
+}));
 
 /**
  * Build application.
  */
-gulp.task('build', ['clean', 'ts:lint', 'ts', 'client-js', 'statics:copy']);
+gulp.task('build', gulp.series("clean", "ts:lint", "ts", "client-js", "statics:copy"));
 
 /**
  * Build manifest
  */
-gulp.task('generate-manifest', function() {
+gulp.task('generate-manifest', (done) => {
     gulp.src(['./public/images/*_icon.png', 'src/manifest.json'])
         .pipe(zip('TaskModule.zip'))
         .pipe(gulp.dest('manifest'));
+    done();
 });
 
 /**
  * Build debug version of the manifest - 
  */
-gulp.task('generate-manifest-debug', function() {
+gulp.task('generate-manifest-debug', (done) => {
     gulp.src(['./public/images/*_icon.png', 'manifest/debug/manifest.json'])
         .pipe(zip('TaskModuleDebug.zip'))
         .pipe(gulp.dest('manifest/debug'));
+    done();
 });
 
 /**
  * Run tests.
  */
-gulp.task('test', ['ts', 'statics:copy'], function() {
-    return gulp
+gulp.task('test', gulp.series("ts", "statics:copy", (done) => {
+    gulp
         .src('build/test/' + options.specFilter + '.spec.js', {read: false})
         .pipe(mocha({cwd: 'build/src'}))
         .once('error', function () {
@@ -168,12 +176,13 @@ gulp.task('test', ['ts', 'statics:copy'], function() {
         .once('end', function () {
             process.exit();
         });
-});
+    done();
+}));
 
 /**
  * Package up app into a ZIP file for Azure deployment.
  */
-gulp.task('package', ['build'], function () {
+gulp.task('package', gulp.series("build", (done) => {
     var packagePaths = [
         'build/**/*',
         'public/**/*',
@@ -195,24 +204,30 @@ gulp.task('package', ['build'], function () {
         packagePaths.push(excludePattern2);
     }
 
-    return gulp.src(packagePaths, { base: '.' })
+    gulp.src(packagePaths, { base: '.' })
         .pipe(zip(options.packageName))
         .pipe(gulp.dest(options.packagePath));
-});
+    done();
+}));
 
-gulp.task('server:start', ['build'], function() {
+gulp.task('server:start', gulp.series("build", (done) => {
     server.listen({path: 'build/src/app.js'}, function(error) {
         console.log(error);
     });
-});
+    done();
+}));
 
-gulp.task('server:restart', ['build'], function() {
+gulp.task('server:restart', gulp.series("build", (done) => {
     server.restart();
-});
+    done();
+}));
 
-gulp.task('default', ['server:start'], function() {
+gulp.task('default', gulp.series("server:start", (done) => {
     gulp.watch(filesToWatch, ['server:restart']);
-});
-gulp.task('default', ['clean', 'generate-manifest'], function() {
+    done();
+}));
+
+gulp.task('default', gulp.series("clean", "generate-manifest", (done) => {
     console.log('Build completed. Output in manifest folder');
-});
+    done();
+}));
